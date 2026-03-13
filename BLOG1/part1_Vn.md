@@ -32,7 +32,8 @@ Phân biệt *cleaning* và *transformation*
 ## 3. Cách sử dụng Power Query
 
 ## 4. Thống kê chỉ số 
-### 4.1. Một vài hàm đặc trưng trong excel
+Một vài hàm đặc trưng trong excel
+
 Ứng dụng Excel được sử dụng rộng rãi trong các bài toán *Data Analyst*. Ta ví dụ cho một bộ data set sau (định dạng csv)
 |Hàm|Ứng dụng|Cấu trúc|Ví dụ|
 |---|---|---|---|
@@ -48,6 +49,6 @@ Ví dụ với data set: "Giá sản phẩm" \
 Trung vị của giá mặt hàng
 =MEDIAN(B2:B10)=45.000 
 ```
-### 4.2. Sự thay đổi sau dọn dẹp 
+Sự thay đổi sau dọn dẹp 
 
 ## 5. Luồng dữ liệu Pipeline
