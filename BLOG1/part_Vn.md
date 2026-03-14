@@ -45,6 +45,7 @@ Blog đưa ra dự án chuẩn hóa bộ dữ liệu Oneline Retail chứa các 
 
 Mục tiêu dự án hướng đến xây dựng Pipeline dữ liệu sạch sẽ và hệ thống báo cáo với quy mô 541.999 dòng dữ liệu gốc.
 
+Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 
 ### 3.1. Power Query Engineering - Pipeline ETL
 Quy trình bao gồm 8 bước chuyên sâu, đảm bảo tính toàn vẹn thực tế và tính chính xác của dữ liệu.
@@ -84,6 +85,16 @@ Kích hoạt các công cụ định lượng ngay tại nguồn:
 - Thêm cột *CountryGroup* để phân loại giữa "UK" và "International" nhằm so sánh hiệu suất thị trường nội địa và xuất khẩu.
 
 <u> **Bước 7: Xử lý chữ** </u>
+
+Hàm **TRIM** và **CLEAN** cho cột *Description*
+```
+=TRIM()
+=CLEAN()
+```
+
+--> Loại bỏ các khoảng trắng rác và ký tự không in được, đảm bảo các sản phẩm cùng loại được nhóm chính xác trong Pivot Table.
+
+
 
 ## 4. Thống kê chỉ số 
 
