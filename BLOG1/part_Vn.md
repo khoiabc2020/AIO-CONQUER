@@ -59,9 +59,12 @@ Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy 
     
 2. Tư duy Code (SQL/Pandas)
 Khi sử dụng Code, nhà phân tích chuyển sang tư duy xây dựng luồng logic (Pipeline) linh hoạt hơn
-    - Xử lý quy mô lớn (Scalability): Code cho phép xử lý hàng triệu đến hàng tỷ dòng dữ liệu, nơi mà Excel thường gặp giới hạn về hiệu suất
+    - Xử lý quy mô lớn (*Scalability*): Code cho phép xử lý hàng triệu đến hàng tỷ dòng dữ liệu, nơi mà Excel thường gặp giới hạn về hiệu suất
     - Logic phức tạp: Các ngôn ngữ như SQL/Pandas hỗ trợ các phép toán sâu như Window Functions (Buổi 7) hoặc các mô hình máy học (Machine Learning) mà GUI khó có thể đáp ứng
     - Tự động hóa sâu: Thay vì ghi lại bước thao tác, code sử dụng các hàm (functions) và script để kết nối đa nguồn dữ liệu (SQL, API, Cloud) và tự động hóa toàn bộ quy trình thu thập - xử lý
+
+3.  So sánh tư duy xử lý dữ liệu giữa GUI (Power Query) và Code (SQL/Pandas)
+
 
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
