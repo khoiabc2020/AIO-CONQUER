@@ -37,15 +37,15 @@ Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có th
     - Giảm thiểu rủi ro quá khớp (*overfitting*).
 
 3. 5 tiêu chuẩn để đánh giá chất lượng dữ liệu sau khi dọn dẹp:
-1. Accuracy (*Tính chính xác*): Dữ liệu phải phản ánh đúng thực tế khách quan. 
+- Accuracy (*Tính chính xác*): Dữ liệu phải phản ánh đúng thực tế khách quan. 
     - Đơn giá sản phẩm trong bộ dữ liệu Online Retail phải khớp với giá niêm yết trên hệ thống bán hàng thực tế.
-2. Completeness (*Tính đầy đủ*): Dữ liệu không được thiếu các thành phần quan trọng cho mục tiêu phân tích.
+- Completeness (*Tính đầy đủ*): Dữ liệu không được thiếu các thành phần quan trọng cho mục tiêu phân tích.
    - Việc thiếu mã khách hàng (CustomerID) sẽ làm gãy chuỗi phân tích hành vi người dùng
-3. Consistency (*Tính nhất quán*): Dữ liệu phải đồng nhất giữa các bảng và các nguồn.
+- Consistency (*Tính nhất quán*): Dữ liệu phải đồng nhất giữa các bảng và các nguồn.
     - Định dạng ngày tháng hoặc tên quốc gia không được mâu thuẫn giữa các tệp dữ liệu khác nhau
-4. Validity (*Tính hợp lệ*): Dữ liệu phải tuân thủ các quy tắc nghiệp vụ.
+- Validity (*Tính hợp lệ*): Dữ liệu phải tuân thủ các quy tắc nghiệp vụ.
     - Cột "Quantity" (Số lượng) phải là số dương; các giá trị âm không rõ lý do được coi là không hợp lệ và cần xử lý
-5. Timeliness (*Tính kịp thời*):  Dữ liệu phải sẵn có và được cập nhật mới nhất tại thời điểm cần ra quyết định.
+- Timeliness (*Tính kịp thời*):  Dữ liệu phải sẵn có và được cập nhật mới nhất tại thời điểm cần ra quyết định.
     - Dữ liệu quá cũ sẽ không còn phản ánh đúng xu hướng thị trường hiện tại.
 
 ### 2.2.Phân biệt *cleaning* và *transformation*
