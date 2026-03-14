@@ -102,7 +102,7 @@ Data Pipeline|Luồng xử lý dữ liệu|Chuỗi các bước xử lý dữ li
 Data Quality|Chất lượng dữ liệu|Mức độ đáng tin cậy và khả năng sử dụng của dữ liệu|
 Accuracy|Tính chính xác|Mức độ phản ánh đúng thực tế của dữ liệu|
 Completeness|Tính đầy đủ|Mức độ đầy đủ của dữ liệu cần thiết cho phân tích|
-Consistency	Tính nhất quán	Mức độ đồng nhất của dữ liệu giữa các bảng và nguồn dữ liệu|
+Consistency|Tính nhất quán|Mức độ đồng nhất của dữ liệu giữa các bảng và nguồn dữ liệu|
 Validity|Tính hợp lệ|Mức độ tuân thủ các quy tắc dữ liệu|
 Timeliness|Tính kịp thời|Mức độ cập nhật và phù hợp của dữ liệu theo thời gian|
 Data Analysis|Phân tích dữ liệu|Quá trình khám phá và diễn giải dữ liệu để hỗ trợ ra quyết định|
