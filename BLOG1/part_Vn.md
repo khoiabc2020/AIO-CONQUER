@@ -21,6 +21,7 @@ Thuật ngữ *Data cleaning* chỉ quá trình xử lý dữ liệu để làm 
     - Dữ liệu trùng lặp (Duplicates)
     - Sai định dạng (Format errors)
     - Giá trị không hợp lệ (Invalid values)
+
 Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có thể được sử dụng một cách đáng tin cậy trong các hoạt động phân tích và ra quyết định.
 
 2. Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nhau:
