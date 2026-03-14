@@ -58,13 +58,13 @@ Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có th
 |Ví dụ|Trim, Remove Duplicates, Replace Null|Unpivot, Group By, Split Column, Merge|
 
 ### 2.3. Tư duy xử lý dữ liệu giữa *GUI* và *Code*
-Tư duy GUI (Power Query)
-
+Trong thực tế, quá trình xử lý dữ liệu có thể được thực hiện thông qua hai cách tiếp cận chính: sử dụng giao diện trực quan (GUI) hoặc sử dụng ngôn ngữ lập trình (Code)
+1. Tư duy GUI (Power Query)
 Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy trình Get & Transform
-- Ghi lại lịch sử (*Applied Steps*): Thay vì viết code, mọi thao tác (như lọc null, đổi định dạng) đều được ghi lại thành các bước thực hiện
-. Điều này giúp người dùng không chuyên cũng có thể hiểu và kiểm soát luồng xử lý dữ liệu.
-- Phân tích nhanh (*Efficiency*): GUI cực kỳ hiệu quả cho dữ liệu vừa và nhỏ (dưới 1 triệu dòng), cho phép tạo báo cáo chỉ trong 2-3 tiếng
-- Tính kế thừa: Khi có dữ liệu mới, người dùng chỉ cần nhấn Refresh để hệ thống chạy lại các bước đã lưu mà không cần can thiệp kỹ thuật
+    - Ghi lại lịch sử (*Applied Steps*): Thay vì viết code, mọi thao tác (như lọc null, đổi định dạng) đều được ghi lại thành các bước thực hiện
+    . Điều này giúp người dùng không chuyên cũng có thể hiểu và kiểm soát luồng xử lý dữ liệu.
+    - Phân tích nhanh (*Efficiency*): GUI cực kỳ hiệu quả cho dữ liệu vừa và nhỏ (dưới 1 triệu dòng), cho phép tạo báo cáo chỉ trong 2-3 tiếng
+    - Tính kế thừa: Khi có dữ liệu mới, người dùng chỉ cần nhấn Refresh để hệ thống chạy lại các bước đã lưu mà không cần can thiệp kỹ thuật
     
 Tư duy Code (SQL/Pandas)
 
