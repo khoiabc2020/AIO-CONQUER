@@ -35,26 +35,44 @@ Phân biệt *cleaning* và *transformation*
 
 ### 2.2. Tư duy xử lý dữ liệu giữa GUI và Code
 
-## 3. Cách sử dụng Power Query
+## 3. Các công cụ làm sạch dữ liệu
+Một số công cụ phổ biến và hiệu quả:
+1. **Power Query (ETL)**
+2. **Excal Data Analysis ToolPak (Thống kê)**
+3. **Lập trình Python (Validation)**
+
+Blog đưa ra dự án chuẩn hóa bộ dữ liệu Oneline Retail chứa các giao dịch xuyên biên giới. Đặc thù dữ liệu thô có độ nhiễu cao do lỗi nhập liệu, đơn hàng hủy và khách hàng vãng lai.
+
+Mục tiêu dự án hướng đến xây dựng Pipeline dữ liệu sạch sẽ và hệ thống báo cáo với quy mô 541.999 dòng dữ liệu gốc.
+
+
+### 3.1. Power Query Engineering - Pipeline ETL
+Quy trình bao gồm 8 bước chuyên sâu, đảm bảo tính toàn vẹn thực tế và tính chính xác của dữ liệu.
+
+<u> **Bước 1: Import & Data profiling** </u>
+
+Kích hoạt các công cụ định lượng ngay tại nguồn:
+- Column Quality: Nhận diện 24.9% giá trị trống tại CustomerID.
+- Column Profile: Phát hiện UnitPrice bằng 0, đây là các dòng "*Bad Data*" cần loại bỏ để không làm sai lệch chỉ số AOV (doanh nghiệp trung bình đơn).
+
+ẢNH1
+
+<u> **Bước 2: Xử lý Missing Values** </u>
+
+- Phương pháp: Filter Null (loại bỏ)
+- Giải trình: Trong phân tích bán lẻ, "CustomerID" là khóa ngoại (*Foreign Key*) để kết nối với bảng khách hàng. Dữ liệu thiếu khóa này không thể định danh hành vi, do đó việc giữ lại sẽ gây nhiễu cho các thuật toán phân lớp khách hàng (*Clustering*).
+
+<u> **Bước 3: Xử lý trùng lặp** </u>
+
+- Thuật toán: Remove Duplicates
+- Ứng dụng: Thuật toán áp dụng trên toàn bộ tập hợp cột để đảm bảo mỗi bản ghi là một giao dịch duy nhất, tránh tình trạng "*Double Counting*" doanh thu do lỗi hệ thống.
+
+<u> **Bước 4: Xử lý giao dịch biên** </u>
+
+
+
 
 ## 4. Thống kê chỉ số 
-Một vài hàm đặc trưng trong excel
 
-Ứng dụng Excel được sử dụng rộng rãi trong các bài toán *Data Analyst*. Ta ví dụ cho một bộ data set sau (định dạng csv)
-|Hàm|Ứng dụng|Cấu trúc|Ví dụ|
-|---|---|---|---|
-|Average|Tính giá trị trung bình |=AVERAGE(block:block)|=AVERAGE(A1:A10) tính giá trị từ ô A1 đên ô A2|
-|Meadian|Tìm trung vị|=MEDIAN(block:block)|=MEDIAN(C2:C6)| 
-|Standard Deviation |Độ lệch chuẩn của mẫu |=STDEV.S(block:block)|=STDEV.S(G6:G13)|
-|Skewness|Độ lệch |=SKEW(block:block)|=SKEW(A4:A30)|
-
-Ví dụ với data set: "Giá sản phẩm" \
-![alt text](image.png)
-
-```excel
-Trung vị của giá mặt hàng
-=MEDIAN(B2:B10)=45.000 
-```
-Sự thay đổi sau dọn dẹp 
 
 ## 5. Luồng dữ liệu Pipeline
