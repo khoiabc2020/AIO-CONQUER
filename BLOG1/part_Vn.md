@@ -92,7 +92,6 @@ Kết quả:
 <img src = "image-8.png" width = "300">
 </p>
 
-
 <u> **Bước 3: Lọc nhiễu giao dịch** </u>
 
 Dữ liệu thô chứa các giao dịch hủy (mã hóa bằng tiền tố '*C*' trong *InvoiceNo*) và các dòng thử nghiệm.
@@ -102,46 +101,100 @@ Dữ liệu thô chứa các giao dịch hủy (mã hóa bằng tiền tố '*C*
     cho đồng thời hai cột số lượng và đơn giá.
 - Ý nghĩa nghiệp vụ: Loại bỏ đơn hàng bị hủy, quà tặng tặng kèm (giá 0) và nợ xấu. Điều này giúp tính toán Doanh thu thực tế (Net Revenue) thay vì doanh thu ảo.
 
+<p align = "center">
+<img src = "image-9.png" width = "300">
+</p>
 
-<u> **Bước 4: Xử lý giao dịch biên** </u>
 
-- Điều kiện kết quả lọc: *Quantity* > 0 và *UnitPrice* > 0
-- Giải trình: Các dòng có số lượng âm thường là đơn hoàn (*Cancelled*), chúng tôi tách chúng ra một luồng xử lý riêng để phân tích rủi ro, thay vì gộp chung vào luồng doanh thu thuần.
+<u> **Bước 4: Định dạng dữ liệu** </u>
 
-<u> **Bước 5: Chuẩn hóa Schema và kiểu dữ liệu** </u>
+Ép kiểu dữ liệu để tối ưu hóa hiệu năng tính toán trong Excel Data Model:
 
-Ép kiểu dữ liệu đóng vai trò quan trọng cho hiệu năng tính toán:
-- Tạo phân cấp Năm/Quý/Tháng cho Time-series: *InvoiceDate* --> *Date*
-- Định dạng tiền tệ chuẩn: *TotalRevenue* --> *Currency*
+- *InvoiceDate*: Chuyển sang Date/Time (Cho phép phân tích xu hướng mua hàng theo giờ/tháng).
+- *UnitPrice*: Chuyển sang Decimal Number (Bảo toàn độ chính xác tiền tệ).
+- *Quantity*: Chuyển sang Whole Number (Số lượng đơn vị sản phẩm).
+- *CustomerID*: Chuyển sang Whole Number (Dùng làm định danh thay vì văn bản).
 
-<u> **Bước 6: Tạo thuộc tính mới** </u>
+<p align = "center">
+<img src = "image-10.png" width = "500">
+</p>
 
-- Thêm cột *TotalRevenue* = [*Quantity*] * [*UnitPrice*]
-- Thêm cột *CountryGroup* để phân loại giữa "UK" và "International" nhằm so sánh hiệu suất thị trường nội địa và xuất khẩu.
+<u> **Bước 5: Text Cleaning – Chuẩn hóa SKUs** </u>
 
-<u> **Bước 7: Xử lý chữ** </u>
+Cột Description chứa nhiều lỗi nhập liệu thủ công:
 
-Hàm **TRIM** và **CLEAN** cho cột *Description*
+- Trim: Loại bỏ khoảng trắng thừa đầu và cuối chuỗi.
+- Clean: Loại bỏ các ký tự ẩn gây lỗi định dạng.
+- Capitalize Each Word: Đồng nhất cách viết 
+
+(ví dụ: "  red  mug" -> "Red Mug").
+
+    --> Kết quả: Đảm bảo khi chạy Pivot Table, các sản phẩm không bị tách rời vô lý.
+
+<p align = "center">
+<img src = "image-11.png" width = "500">
+</p>
+
+<u> **Bước 6: Tạo cột trạng thái đơn hàng** </u>
+
+Xây dựng cột logic để phân loại quy mô giao dịch:
+
+- Thao tác: Add Column > Conditional Column.
+- Logic: if [Quantity] > 100 then "*Wholesale*" else "*Retail*".
+- Mục đích: Hỗ trợ Designer tạo *Slicer* trên Dashboard để so sánh hành vi giữa nhóm khách mua sỉ và mua lẻ.
+
+<p align = "center">
+<img src = "image-12.png" width = "500">
+</p>
+<p align = "center">
+<img src = "image-13.png" width = "300">
+</p>
+
+<u> **Bước 7: Chi lại lịch sử thao tác** </u>
+
+Mọi bước trên được ghi lại trong bảng Applied Steps.
+- Ý nghĩa: Đây là "kịch bản" tự động hóa. Khi có tệp dữ liệu tháng tiếp theo, chúng ta chỉ cần nhấn *Refresh*, Power Query sẽ tự động lặp lại 8 bước này, loại bỏ 100% sai sót thủ công và đảm bảo tính nhất quán (*Reproducibility*).
+
+<p align = "center">
+<img src = "image-14.png" width = "300">
+</p>
+
+<u> **Bước 8: Advanced Editor & Ngôn ngữ M-Code** </u>
+
+Đối với bước phức tạp nhất, khuyến khích sử dụng *Advanced Editor* để kiểm soát trực tiếp mã nguồn.
+
+Mã M-code chi tiết xử lý pipeline:
+```m
+let
+    Source = Excel.Workbook(File.Contents("C:\Data\OnlineRetail.xlsx"), null, true),
+    Data = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+    // Lọc bỏ rác và null trong một bước duy nhất để tối ưu Query Folding
+    #"CleanedData" = Table.SelectRows(#"Promoted Headers", each [CustomerID] <> null and [Quantity] > 0 and [UnitPrice] > 0),
+    #"ChangedTypes" = Table.TransformColumnTypes(#"CleanedData",{
+        {"Quantity", Int64.Type}, {"UnitPrice", type number}, {"CustomerID", Int64.Type}, {"InvoiceDate", type datetime}
+    }),
+    #"FormattedText" = Table.TransformColumns(#"ChangedTypes", {{"Description", each Text.Proper(Text.Trim(_)), type text}}),
+    #"AddedStatus" = Table.AddColumn(#"FormattedText", "OrderType", each if [Quantity] > 100 then "Wholesale" else "Retail")
+in
+    #"AddedStatus"
 ```
-=TRIM()
-=CLEAN()
-```
+<p align = "center">
+<img src = "image-15.png" width = "400">
+</p>
 
---> Loại bỏ các khoảng trắng rác và ký tự không in được, đảm bảo các sản phẩm cùng loại được nhóm chính xác trong Pivot Table.
 
-<u> **Bước 8: Tối ưu hóa quy trình** </u>
+### 3.2. Phân tích thống kê, vai trò của Analyst
 
-Mọi bước đều được tối ưu hóa trong *Advanced Editor* để tận dụng tính năng *Query Folding* giúp tăng tốc độ làm mới (*Refresh*) dữ liệu lên 30%
+Sử dụng bộ công cụ *Descriptive Statistics* trong Excel để giải mã các con số đằng sau tập dữ liệu đã sạch.
 
-ẢNH2
-
-### 3.2. Excel Data Analysis ToolPak
-Các chỉ số đo lường trung tâm
-
-Phân phối thực tế của doanh nghiệp:
-
-- MEAN: Kỳ vọng doanh thu/dòng sản phẩm
-- MEDIAN: Đơn hàng nhỏ lẻ, thấp hơn MEAN, trong khi đơn hàng sỉ (*Wholesale*) đóng vai trò là các chỉ số tích cực.
+Chỉ số mô tả chuyên sâu:
+|Chỉ số|Giá trị|Phân tích chuyên sâu|Ý nghĩa|
+|---|---|---|---|
+|MEAN|$22.39|Giá trị doanh thu trung bình trên mỗi dòng sản phẩm|
+|MEDIAN|$12.30|Điểm trung tâm thực sự của dữ liệu, phản ánh khách lẻ bình thường|
+|Std Dev $$\sigma $$|$165.05|TĐộ lệch chuẩn phản ánh mức độ dao động mạnh giữa các mã hàng|
+|Skewness|3.2|Hệ số lệch dương, chứng tỏ doanh nghiệp có cơ sở khách hàng lẻ rộng|
 
 
 Công thức độ lệch chuẩn:
@@ -153,13 +206,9 @@ $$
 \
 $$
 
-Bảng đối soát hiệu quả:
-|Chỉ số|Trước cleaning|Sau cleaning|Ý nghĩa|
-|---|---|---|---|
-|Số lượng bản ghi|541,909|~397,884|Loại bỏ 26% dữ liệu rác/lỗi|
-|Hệ số lệch (*skewness*)|12.5|3.2|Dữ liệu ổn định, bớt cực đoan hơn|
-|Độ tin cậy|Thấp|Tuyệt đối|Sẵn sàng cho việc ra quyết định|
+Tại sao Median lại là "vị cứu tinh"?
 
+- Trong bộ dữ liệu này, các khách bán sỉ (*Wholesalers*) mua hàng nghìn món tạo ra các *Outliers* cực lớn kéo chỉ số *MEAN* lên cao giả tạo. Chỉ số *MEDIAN* = 12.30 không bị ảnh hưởng bởi giá trị ngoại lai, giúp nhà quản lý nhận diện đúng hành vi tiêu dùng của 90% khách hàng lẻ (*Retailers*).
 
 ### 3.3. Python 
 Sử dụng Python để kiểm chứng lại toàn bộ Pipeline của Power Query, đảm bảo tính khách quan 
