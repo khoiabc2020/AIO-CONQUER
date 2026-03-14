@@ -27,7 +27,17 @@ Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nh
 3. Học máy:
     - Nền tảng xây dựng mô hình học máy (*Machine Learning*) hiệu quả.
     - Cải thiện khả năng tổng quan trên dữ liệu mới.
-    - Giảm thiểu rủi ro quá khớp (*overfitting*). 
+    - Giảm thiểu rủi ro quá khớp (*overfitting*).
+
+Các thao tác điển hình:
+1.Unpivot Columns: Chuyển đổi dữ liệu từ dạng ngang (Wide format - thường dùng cho báo cáo thủ công) sang dạng dọc (Tall/Long format - dùng cho máy tính xử lý và Pivot Table)
+Tách/Gộp cột (Split/Merge): Ví dụ: Tách một cột "FullName" thành hai cột "FirstName" và "LastName", hoặc gộp nhiều cột địa chỉ thành một chuỗi duy nhất
+.
+Sắp xếp và Đổi tên: Thay đổi thứ tự các cột (Reorder) hoặc đặt lại tên cột để dễ hiểu hơn
+.
+Tổng hợp dữ liệu (Aggregation): Sử dụng tính năng Group By để tính tổng hoặc trung bình dữ liệu theo từng nhóm
+.
+Kết nối dữ liệu: Sử dụng Merge Queries (tương tự Join trong SQL) hoặc Append Queries để kết hợp nhiều bảng dữ liệu lại với nhau
 
 Phân biệt *cleaning* và *transformation*
 |Đặc điểm|Cleaning|Transformation|
