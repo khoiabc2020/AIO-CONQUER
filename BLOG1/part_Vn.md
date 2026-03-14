@@ -59,6 +59,7 @@ Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có th
 
 ### 2.3. Tư duy xử lý dữ liệu giữa *GUI* và *Code*
 Trong thực tế, quá trình xử lý dữ liệu có thể được thực hiện thông qua hai cách tiếp cận chính: sử dụng giao diện trực quan (GUI) hoặc sử dụng ngôn ngữ lập trình (Code)
+
 <u> **Tư duy GUI (Power Query)** </u>
 
 Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy trình Get & Transform
