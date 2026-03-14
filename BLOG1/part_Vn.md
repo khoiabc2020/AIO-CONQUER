@@ -31,7 +31,7 @@ Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nh
 
 5 tiêu chuẩn để đánh giá chất lượng dữ liệu sau khi dọn dẹp:
 1. Accuracy (*Tính chính xác*): Dữ liệu phải phản ánh đúng giá trị thực tế của các sự vật, hiện tượng.
-   Ví dụ, trong bộ dữ liệu bán lẻ, giá trị đơn hàng phải khớp với số tiền thực tế khách đã trả; nếu không chính xác, các báo cáo doanh thu sẽ bị sai lệch hoàn toàn
+Ví dụ, trong bộ dữ liệu bán lẻ, giá trị đơn hàng phải khớp với số tiền thực tế khách đã trả; nếu không chính xác, các báo cáo doanh thu sẽ bị sai lệch hoàn toàn
 
 Phân biệt *cleaning* và *transformation*
 |Đặc điểm|Cleaning|Transformation|
