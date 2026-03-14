@@ -92,10 +92,21 @@ Raw Data|Dữ liệu thô|Dữ liệu chưa qua xử lý, còn nhiều sai sót|
 Missing Data|Dữ liệu thiếu|Các ô trống (null) trong tập dữ liệu|
 Duplicates|Dữ liệu trùng lặp|Các bản ghi bị lặp lại không mong muốn|
 Outliers|Giá trị ngoại lai|Các giá trị bất thường so với phần còn lại|
+Invalid Values|Giá trị không hợp lệ|Các giá trị không tuân thủ quy tắc dữ liệu hoặc quy tắc nghiệp vụ
 Data Profiling|Phân tích hồ sơ dữ liệu|Đánh giá chất lượng dữ liệu trước khi dọn dẹp|
 Applied Steps|Các bước đã thực hiện|Bảng lưu lịch sử thao tác trong Power Query|
 Unpivot|Hủy xoay cột|Chuyển dữ liệu từ dạng ngang sang dạng dọc|
 Consistency|Tính nhất quán|Sự đồng nhất về định dạng và thông tin|
+Data Transformation|Biến đổi dữ liệu|Quá trình thay đổi cấu trúc hoặc định dạng dữ liệu để phục vụ phân tích|
+Data Pipeline|Luồng xử lý dữ liệu|Chuỗi các bước xử lý dữ liệu từ thu thập đến phân tích|
+Data Quality|Chất lượng dữ liệu|Mức độ đáng tin cậy và khả năng sử dụng của dữ liệu|
+Accuracy|Tính chính xác|Mức độ phản ánh đúng thực tế của dữ liệu|
+Completeness|Tính đầy đủ|Mức độ đầy đủ của dữ liệu cần thiết cho phân tích|
+Consistency	Tính nhất quán	Mức độ đồng nhất của dữ liệu giữa các bảng và nguồn dữ liệu|
+Validity|Tính hợp lệ|Mức độ tuân thủ các quy tắc dữ liệu|
+Timeliness|Tính kịp thời|Mức độ cập nhật và phù hợp của dữ liệu theo thời gian|
+Data Analysis|Phân tích dữ liệu|Quá trình khám phá và diễn giải dữ liệu để hỗ trợ ra quyết định|
+Machine Learning|Học máy|Phương pháp sử dụng thuật toán để máy tính học từ dữ liệu|
 
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
