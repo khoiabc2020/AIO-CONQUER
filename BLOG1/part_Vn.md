@@ -23,7 +23,7 @@ Thuật ngữ *Data cleaning* chỉ quá trình xử lý dữ liệu để làm 
     - Giá trị không hợp lệ (Invalid values)
 Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có thể được sử dụng một cách đáng tin cậy trong các hoạt động phân tích và ra quyết định.
 
-2.Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nhau:
+2. Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nhau:
 - Phân tích dữ liệu:
     - Đảm bảo tính chính xác trong đưa ra các quyết định quan trọng: Tính toàn vẹn của kết luận phụ thuộc vào độ sạch của dữ liệu.
     - Giảm thiểu sai lệch trong quá trình phân tích, đặc biệt trong nghiên cứu và phát triển khoa học, doanh nghiệp,...
