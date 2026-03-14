@@ -126,8 +126,8 @@ Bảng đối soát hiệu quả:
 |Độ tin cậy|Thấp|Tuyệt đối|Sẵn sàng cho việc ra quyết định|
 
 
-<img src = "image.png" alt = "Before and After" width = "400">
-<img src = "image-1.png" width = "400">
+<img src = "image.png" alt = "Before and After" width = "300">
+<img src = "image-1.png" width = "300">
 
 
 ### 3.3. Python 
@@ -155,6 +155,3 @@ raw_data = pd.read_excel(input_path, engine = "xlrd")
 
 Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 
-
-
-## 5. Luồng dữ liệu Pipeline
