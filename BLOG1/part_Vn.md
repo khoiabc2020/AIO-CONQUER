@@ -74,6 +74,19 @@ So sánh tư duy xử lý dữ liệu giữa *GUI* (Power Query) và *Code* (SQL
 |Giới hạn|Tối ưu cho < 1 triệu dòng|Xử lý dữ liệu cực lớn (Big Data)|
 |Độ linh hoạt|Thao tác theo tính năng có sẵn|Tùy biến logic cực cao qua hàm|
 
+### 2.3. Bảng thuật ngữ Anh-Việt.
+
+|Thuật ngữ Anh|Thuật ngữ Việt|Ý nghĩa kỹ thuật|
+|---|---|---|
+Raw Data|Dữ liệu thô|Dữ liệu chưa qua xử lý, còn nhiều sai sót|
+Missing Data|Dữ liệu thiếu|Các ô trống (null) trong tập dữ liệu|
+Duplicates|Dữ liệu trùng lặp|Các bản ghi bị lặp lại không mong muốn|
+Outliers|Giá trị ngoại lai|Các giá trị bất thường so với phần còn lại|
+Data Profiling|Phân tích hồ sơ dữ liệu|Đánh giá chất lượng dữ liệu trước khi dọn dẹp|
+Applied Steps|Các bước đã thực hiện|Bảng lưu lịch sử thao tác trong Power Query|
+Unpivot|Hủy xoay cột|Chuyển dữ liệu từ dạng ngang sang dạng dọc|
+Consistency|Tính nhất quán|Sự đồng nhất về định dạng và thông tin|
+
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
 1. **Power Query (ETL)**
