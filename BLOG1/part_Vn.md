@@ -101,7 +101,13 @@ Mọi bước đều được tối ưu hóa trong *Advanced Editor* để tận
 ẢNH2
 
 ### 3.2. Excel Data Analysis ToolPak
-#### 3.2.1. Các chỉ số đo lường trung tâm
+Các chỉ số đo lường trung tâm
+
+Phân phối thực tế của doanh nghiệp:
+
+- MEAN: Kỳ vọng doanh thu/dòng sản phẩm
+- MEDIAN: Đơn hàng nhỏ lẻ, thấp hơn MEAN, trong khi đơn hàng sỉ (*Wholesale*) đóng vai trò là các chỉ số tích cực.
+
 
 Công thức độ lệch chuẩn:
 
@@ -112,11 +118,43 @@ $$
 \
 $$
 
+Bảng đối soát hiệu quả:
+|Chỉ số|Trước cleaning|Sau cleaning|Ý nghĩa|
+|---|---|---|---|
+|Số lượng bản ghi|541,909|~397,884|Loại bỏ 26% dữ liệu rác/lỗi|
+|Hệ số lệch (*skewness*)|12.5|3.2|Dữ liệu ổn định, bớt cực đoan hơn|
+|Độ tin cậy|Thấp|Tuyệt đối|Sẵn sàng cho việc ra quyết định|
 
 
+<img src = "image.png" alt = "Before and After" width = "400">
+<img src = "image-1.png" width = "400">
 
 
-## 4. Thống kê chỉ số 
+### 3.3. Python 
+Sử dụng Python để kiểm chứng lại toàn bộ Pipeline của Power Query, đảm bảo tính khách quan 
+
+Các thư viện 
+```python
+from pathlib import Path
+import matplotlib.pyplot as plt
+import pandas as pd
+from google.colab import files
+from IPython.display import display
+```
+Phần format pandas
+```python
+pd.set_option("display.max_columns", None)
+pd.set_option("display.float_format", lambda value: f"{value:,.2f}")
+```
+
+Tải file lên Colab và đọc bằng pandas
+```python
+input_path = Path(next(iter(files.upload())))
+raw_data = pd.read_excel(input_path, engine = "xlrd")
+```
+
+Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
+
 
 
 ## 5. Luồng dữ liệu Pipeline
