@@ -64,7 +64,12 @@ Khi sử dụng Code, nhà phân tích chuyển sang tư duy xây dựng luồng
     - Tự động hóa sâu: Thay vì ghi lại bước thao tác, code sử dụng các hàm (functions) và script để kết nối đa nguồn dữ liệu (SQL, API, Cloud) và tự động hóa toàn bộ quy trình thu thập - xử lý
 
 3.  So sánh tư duy xử lý dữ liệu giữa GUI (Power Query) và Code (SQL/Pandas)
-
+|Đặc điểm|GUI (Power Query)|Code (SQL/Pandas)|
+|---|---|---|
+|Cách tiếp cận|Tương tác trực quan trên thanh Ribbon|Xây dựng logic qua mã lệnh script|
+|Lịch sử xử lý|Bảng Applied Steps tự động|Tệp code (.sql, .py) được lưu trữ|
+|Giới hạn|Tối ưu cho < 1 triệu dòng|Xử lý dữ liệu cực lớn (Big Data)|
+|Độ linh hoạt|Thao tác theo tính năng có sẵn|Tùy biến logic cực cao qua hàm|
 
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
