@@ -35,8 +35,7 @@ Phân biệt *cleaning* và *transformation*
 |Mục tiêu|Đảm bảo dữ liệu đầy đủ, chính xác|Chuyển cấu trúc dữ liệu sang dạng phù hợp hơn cho phân tích|
 |Hoạt động chính|- Sửa lỗi nhập liệu: sai chính tả, thiếu dữ liệu - Loại bỏ sự trùng lặp - Loại bỏ số liệu không hợp lệ (NaN, số âm) - Loại bỏ dữ liệu nhiễu (không liên quan)|- Chuẩn hóa đơn vị đo - Dùng Pivot/Unipivot để thay đổi cấu trúc - Áp dụng các phép toán chuẩn hóa dữ liệu về cùng thang đo - Tạo biến mới từ dữ liệu gốc|
 |Kết quả|Dữ liệu chính xác, không còn "rác"|Dữ liệu sẵn sàng cho mô hình hóa và báo cáo|
-|Ví dụ|Trim, Remove Duplicates, Replace Null
-|Unpivot, Group By, Split Column, Merge|
+|Ví dụ|Trim, Remove Duplicates, Replace Null|Unpivot, Group By, Split Column, Merge|
 
 ### 2.2. Tư duy xử lý dữ liệu giữa GUI và Code
 
