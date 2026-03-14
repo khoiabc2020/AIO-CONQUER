@@ -52,30 +52,56 @@ Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 
 ### 3.1. Power Query Engineering - Pipeline ETL
 
-Kết nối trực tiếp với file Excel thông qua:
-
-Data -> Get Data -> From File -> From Workbook. 
-
-Ngay khi nạp, các công cụ Data Profiling trong tab View được kích hoạt:
+Áp dụng quy trình 8 bước nghiêm ngặt trên Power Query
 
 <u> **Bước 1: Chấn đoán sức khỏe dữ liệu** </u>
+
+- Import file csv:
+Data -> Get Data -> From File -> From Workbook. 
+<p align = "center">
+<img src = "image-3.png" width = "300">
+<img src = "image-4.png" width = "300">
+</p>
+
+Ngay khi nạp, kích hoạt *Column Quality* và *Column Distribution* trong tab View
+<p align = "center">
+<img src = "image-5.png" width = "500">
+</p>
 
 Kích hoạt các công cụ định lượng ngay tại nguồn:
 - Column Quality: Kiểm tra tỷ lệ "*Valid*", "*Error*" và "*Empty*". Kết quả cho thấy, cột *CustomerID* chỉ có 75.1% dữ liệu hợp lệ.
 - Column Distribution: Nhận diện sự phân bổ của các mã hàng. Biểu đồ cho thấy sự hiện diện của các mã không phải sản phẩm như *POST* (phí bưu điện), *D* (giảm giá), *M* (thao tác tay).
 - Column Profile: Cung cấp thống kê chi tiết cho từng cột (Min, Max, Mean). Phát hiện *Quantity* âm (-80,995). Đây là các giao dịch trả hàng cần xử lý.
 
-ẢNH1
+Biểu đồ Column Profile hiển thị giá trị Min/Max của Quantity 
+<p align = "center">
+<img src = "image-6.png" width = "500">
+</p>
+
 
 <u> **Bước 2: Xử lý dữ liệu bị thiếu** </u>
 
-- Phương pháp: Filter Null (loại bỏ)
-- Giải trình: Trong phân tích bán lẻ, "CustomerID" là khóa ngoại (*Foreign Key*) để kết nối với bảng khách hàng. Dữ liệu thiếu khóa này không thể định danh hành vi, do đó việc giữ lại sẽ gây nhiễu cho các thuật toán phân lớp khách hàng (*Clustering*).
+Phân tích cho thấy có 135,080 dòng thiếu định danh khách hàng.
 
-<u> **Bước 3: Xử lý trùng lặp** </u>
+- Thao tác: Nhấp chuột phải vào cột CustomerID > Remove Empty.
+- Giải trình kỹ thuật: Tại sao chọn lọc bỏ thay vì thay thế (Imputation)?
+    - Tính định danh: *CustomerID* là "khóa ngoại" duy nhất để liên kết với hành vi khách hàng. Nếu điền mã giả (ví dụ: 0), hệ thống sẽ hiểu 135,080 giao dịch này thuộc về cùng một người, làm hỏng hoàn toàn phân tích lòng trung thành (*Retention Rate*).
+    - Mục tiêu RFM: Để tính toán *Recency* (Ngày mua gần nhất) và Frequency (Tần suất), ta bắt buộc phải có thông tin định danh chính xác từ hệ thống CRM.
+Kết quả:
+<p align = "center">
+<img src = "image-8.png" width = "300">
+</p>
 
-- Thuật toán: Remove Duplicates
-- Ứng dụng: Thuật toán áp dụng trên toàn bộ tập hợp cột để đảm bảo mỗi bản ghi là một giao dịch duy nhất, tránh tình trạng "*Double Counting*" doanh thu do lỗi hệ thống.
+
+<u> **Bước 3: Lọc nhiễu giao dịch** </u>
+
+Dữ liệu thô chứa các giao dịch hủy (mã hóa bằng tiền tố '*C*' trong *InvoiceNo*) và các dòng thử nghiệm.
+
+- Thao tác: Thiết lập bộ lọc kép 
+    *Number Filter* > *Greater Than 0* 
+    cho đồng thời hai cột số lượng và đơn giá.
+- Ý nghĩa nghiệp vụ: Loại bỏ đơn hàng bị hủy, quà tặng tặng kèm (giá 0) và nợ xấu. Điều này giúp tính toán Doanh thu thực tế (Net Revenue) thay vì doanh thu ảo.
+
 
 <u> **Bước 4: Xử lý giao dịch biên** </u>
 
