@@ -30,15 +30,16 @@ Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nh
     - Giảm thiểu rủi ro quá khớp (*overfitting*).
 
 5 tiêu chuẩn để đánh giá chất lượng dữ liệu sau khi dọn dẹp:
-1. Accuracy (*Tính chính xác*): Dữ liệu phải phản ánh đúng giá trị thực tế của các sự vật, hiện tượng.
-    - Ví dụ, trong bộ dữ liệu bán lẻ, giá trị đơn hàng phải khớp với số tiền thực tế khách đã trả; nếu không chính xác, các báo cáo doanh thu sẽ bị sai lệch hoàn toàn
-2. Completeness (*Tính đầy đủ*): Dữ liệu không được thiếu các thành phần quan trọng cần thiết cho mục tiêu phân tích.
-   - Ví dụ, một hồ sơ giao dịch cần có đầy đủ mã khách hàng (CustomerID), mã sản phẩm và ngày mua. Việc thiếu mã khách hàng sẽ khiến nhà phân tích không thể định danh và phân loại hành vi người dùng
-3. Consistency (*Tính nhất quán*): Dữ liệu phải đồng nhất và không có sự mâu thuẫn giữa các bảng hoặc các nguồn khác nhau. 
-    - Ví dụ, thông tin về tên sản phẩm hoặc định dạng ngày tháng phải giống nhau trên toàn bộ hệ thống; không thể cùng một mã sản phẩm nhưng mỗi bảng lại ghi một tên khác nhau
-4. Validity (*Tính hợp lệ*): Dữ liệu phải tuân thủ đúng các quy tắc, định dạng và ràng buộc nghiệp vụ đã được thiết lập. 
-    - Ví dụ, cột "Số lượng" (Quantity) và "Đơn giá" (UnitPrice) phải là số dương (>0); nếu tồn tại giá trị âm mà không có giải trình (như đơn trả hàng), dữ liệu đó được coi là không hợp lệ
-5. Timeliness (*Tính kịp thời*): Dữ liệu phải được cập nhật thường xuyên và sẵn có tại thời điểm cần ra quyết định. Dữ liệu quá cũ sẽ mất đi giá trị thực tiễn vì không còn phản ánh đúng tình hình kinh doanh hiện tại của doanh nghiệp
+1. Accuracy (*Tính chính xác*): Dữ liệu phải phản ánh đúng thực tế khách quan. 
+    - Đơn giá sản phẩm trong bộ dữ liệu Online Retail phải khớp với giá niêm yết trên hệ thống bán hàng thực tế.
+2. Completeness (*Tính đầy đủ*): Dữ liệu không được thiếu các thành phần quan trọng cho mục tiêu phân tích.
+   - Việc thiếu mã khách hàng (CustomerID) sẽ làm gãy chuỗi phân tích hành vi người dùng
+3. Consistency (*Tính nhất quán*): Dữ liệu phải đồng nhất giữa các bảng và các nguồn.
+    - Định dạng ngày tháng hoặc tên quốc gia không được mâu thuẫn giữa các tệp dữ liệu khác nhau
+4. Validity (*Tính hợp lệ*): Dữ liệu phải tuân thủ các quy tắc nghiệp vụ.
+    - Cột "Quantity" (Số lượng) phải là số dương; các giá trị âm không rõ lý do được coi là không hợp lệ và cần xử lý
+5. Timeliness (*Tính kịp thời*):  Dữ liệu phải sẵn có và được cập nhật mới nhất tại thời điểm cần ra quyết định.
+    - Dữ liệu quá cũ sẽ không còn phản ánh đúng xu hướng thị trường hiện tại.
 
 Phân biệt *cleaning* và *transformation*
 |Đặc điểm|Cleaning|Transformation|
