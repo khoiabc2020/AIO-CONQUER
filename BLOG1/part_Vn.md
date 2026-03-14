@@ -63,7 +63,8 @@ Khi sử dụng Code, nhà phân tích chuyển sang tư duy xây dựng luồng
     - Logic phức tạp: Các ngôn ngữ như SQL/Pandas hỗ trợ các phép toán sâu như Window Functions (Buổi 7) hoặc các mô hình máy học (Machine Learning) mà GUI khó có thể đáp ứng
     - Tự động hóa sâu: Thay vì ghi lại bước thao tác, code sử dụng các hàm (functions) và script để kết nối đa nguồn dữ liệu (SQL, API, Cloud) và tự động hóa toàn bộ quy trình thu thập - xử lý
 
-3.  So sánh tư duy xử lý dữ liệu giữa GUI (Power Query) và Code (SQL/Pandas)
+3.  So sánh tư duy xử lý dữ liệu giữa *GUI* (Power Query) và *Code* (SQL/Pandas)
+
 |Đặc điểm|GUI (Power Query)|Code (SQL/Pandas)|
 |---|---|---|
 |Cách tiếp cận|Tương tác trực quan trên thanh Ribbon|Xây dựng logic qua mã lệnh script|
