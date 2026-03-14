@@ -49,8 +49,9 @@ Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nh
 |Kết quả|Dữ liệu chính xác, không còn "rác"|Dữ liệu sẵn sàng cho mô hình hóa và báo cáo|
 |Ví dụ|Trim, Remove Duplicates, Replace Null|Unpivot, Group By, Split Column, Merge|
 
-### 2.3. Tư duy xử lý dữ liệu giữa GUI và Code
+### 2.3. Tư duy xử lý dữ liệu giữa *GUI* và *Code*
 Tư duy GUI (Power Query)
+
 Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy trình Get & Transform
     - Ghi lại lịch sử (*Applied Steps*): Thay vì viết code, mọi thao tác (như lọc null, đổi định dạng) đều được ghi lại thành các bước thực hiện
 . Điều này giúp người dùng không chuyên cũng có thể hiểu và kiểm soát luồng xử lý dữ liệu.
@@ -58,6 +59,7 @@ Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy 
     - Tính kế thừa: Khi có dữ liệu mới, người dùng chỉ cần nhấn Refresh để hệ thống chạy lại các bước đã lưu mà không cần can thiệp kỹ thuật
     
 Tư duy Code (SQL/Pandas)
+
 Khi sử dụng Code, nhà phân tích chuyển sang tư duy xây dựng luồng logic (Pipeline) linh hoạt hơn
     - Xử lý quy mô lớn (*Scalability*): Code cho phép xử lý hàng triệu đến hàng tỷ dòng dữ liệu, nơi mà Excel thường gặp giới hạn về hiệu suất
     - Logic phức tạp: Các ngôn ngữ như SQL/Pandas hỗ trợ các phép toán sâu như Window Functions (Buổi 7) hoặc các mô hình máy học (Machine Learning) mà GUI khó có thể đáp ứng
