@@ -129,10 +129,6 @@ Bảng đối soát hiệu quả:
 |Độ tin cậy|Thấp|Tuyệt đối|Sẵn sàng cho việc ra quyết định|
 
 
-<img src = "image.png" alt = "Before and After" width = "300">
-<img src = "image-1.png" width = "300">
-
-
 ### 3.3. Python 
 Sử dụng Python để kiểm chứng lại toàn bộ Pipeline của Power Query, đảm bảo tính khách quan 
 
@@ -161,6 +157,7 @@ raw_data = pd.read_excel(input_path, engine = "xlrd")
 Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 
 2. **Cách đặt tên cột**
+
 Đặt tên cột không có khoảng trắng: 
     - NameName 
     - Name_Name
@@ -180,7 +177,7 @@ REQUIRED_COLUMNS = [
 ]
 ```
 
-3. **Chuẩn hóa dữ liệu**
+3. **Chuẩn hóa chữ và giá trị rỗng**
 
 ```python 
 def normalize_text(text_series: pd.Series) -> pd.Series:
@@ -193,10 +190,12 @@ def normalize_text(text_series: pd.Series) -> pd.Series:
         # Đưa ra giá trị rỗng về NaN 
         .replace({"": pd.NA, "<NA>": pd.NA})
     )
+```
+4. **Báo cáo dữ liệu**
 
-
+Tạo bảng chỉ số để so sánh dữ liệu trước & sau khi làm sạch.
+```python
 def build_report(data_frame: pd.DataFrame) -> pd.DataFrame:
-    # Tao bang chi so de so sanh du lieu truoc va sau khi lam sach.
     summary_values = {
         "total_rows": len(data_frame),
         "missing_customer_id": data_frame["CustomerID"].isna().sum(),
@@ -214,22 +213,30 @@ def build_report(data_frame: pd.DataFrame) -> pd.DataFrame:
     }
 
     return pd.DataFrame(summary_values.items(), columns=["metric", "value"])
+```
+Kết quả trả về:
 
+<p align = "center">
+    <img src = "image.png" alt = "Before and After" width = "300"/>
+    <img src = "image-1.png" width = "300"/>
+</p>
 
+5. **Làm sạch dữ liệu**
+```python
 def clean_online_retail(raw_data: pd.DataFrame):
-    # Sao chep du lieu goc de tranh sua truc tiep len du lieu ban dau.
+    # Sao chép dữ liệu gốc: Tránh sửa trực tiếp
     cleaned_data = raw_data.copy()
 
-    # Lam sach cac cot text truoc de tranh trung lap gia do khoang trang an.
+    # Làm sạch cột: Tránh sự trùng lặp + khoảng trắng
     for column_name in TEXT_COLUMNS:
         cleaned_data[column_name] = normalize_text(cleaned_data[column_name])
 
-    # Chuan hoa ma khach hang ve dang text don gian.
+    # Chuẩn hóa mã khách hàng - Ví dụ: 123.0 --> 123
     cleaned_data["CustomerID"] = normalize_text(cleaned_data["CustomerID"]).str.replace(
-        r"\.0$", "", regex=True
+        r"\.0$", "", regex=True 
     )
 
-    # Dua cac cot so va ngay thang ve dung kieu du lieu.
+    # Đưa cột ngày/tháng về đúng kiểu dữ liệu: integer, NaN
     cleaned_data["Quantity"] = pd.to_numeric(
         cleaned_data["Quantity"], errors="coerce"
     ).astype("Int64")
@@ -238,15 +245,15 @@ def clean_online_retail(raw_data: pd.DataFrame):
         cleaned_data["InvoiceDate"], errors="coerce"
     )
 
-    # Tinh gia tri dong hang de phuc vu thong ke doanh thu.
+    # Tính giá trị dòng hàng để thống kê doanh nghiệp: nhân số lượng đơn giá với dạng float
     cleaned_data["SaleAmount"] = (
         cleaned_data["Quantity"].astype("float") * cleaned_data["UnitPrice"]
     ).round(2)
 
-    # Bang thong ke truoc khi lam sach.
+    # Tạo bảng thống kê trước khi làm sạch --> Sẽ in ra 
     before_table = build_report(cleaned_data).rename(columns={"value": "before_clean"})
 
-    # Moi quy tac ben duoi danh dau mot nhom dong can loai bo.
+    # Tạo quy tắc để loại bỏ dữ liệu không hợp lý.
     invalid_rules = [
         ("missing_core_fields", cleaned_data[REQUIRED_COLUMNS].isna().any(axis=1)),
         ("missing_customer_id", cleaned_data["CustomerID"].isna()),
@@ -255,34 +262,113 @@ def clean_online_retail(raw_data: pd.DataFrame):
         ("non_positive_unit_price", cleaned_data["UnitPrice"].le(0)),
     ]
 
-    # Ban dau, tat ca cac dong deu duoc giu lai.
+    # Giả sử tất cả các dòng đều hợp lý
     keep_row = pd.Series(True, index=cleaned_data.index)
+    # Tạo hàm loại bỏ
     removed_rows = []
 
-    # Ap dung tung quy tac theo thu tu de thong ke so dong bi loai ro rang hon.
+    # Áp dụng từng quy tắc theo thứ tự 
     for rule_name, invalid_row in invalid_rules:
         current_removed_row = keep_row & invalid_row
         removed_rows.append((rule_name, int(current_removed_row.sum())))
         keep_row &= ~invalid_row
 
-    # Loai bo trung lap sau khi da loc cac dong loi.
+    # Loại bỏ trùng lặp sau khi lọc các dòng
     final_data = cleaned_data.loc[keep_row].drop_duplicates().copy()
     duplicate_rows = int(cleaned_data.loc[keep_row].duplicated().sum())
 
-    # Sap xep lai de du lieu nhin gon va on dinh hon.
+    # Sắp xếp dữ liệu
     final_data = final_data.sort_values(
         ["InvoiceDate", "InvoiceNo", "StockCode"]
     ).reset_index(drop=True)
 
-    # Bang thong ke sau khi lam sach.
+    # Tạo bảng thống kê sau khi làm sạch --> Sẽ in ra
     after_table = build_report(final_data).rename(columns={"value": "after_clean"})
     comparison_table = before_table.merge(after_table, on="metric")
 
-    # Bang so dong bi loai theo tung ly do.
+    # Bảng index bị loại + lý do đi kèm
     removed_table = pd.DataFrame(
         removed_rows + [("duplicate_rows", duplicate_rows)],
         columns=["reason", "rows_dropped"],
     )
 
     return final_data, comparison_table, removed_table
+```
+
+6. **Biểu diễn biểu đồ giá trị MEAN và MEDIAN**
+```python
+# Nhóm lại chỉ số đếm lượng bản ghi + lỗi dữ liệu 
+count_metrics = [
+    "total_rows",
+    "missing_customer_id",
+    "cancelled_invoices",
+    "duplicate_rows",
+]
+
+# Nhóm lại chỉ số giá trị xem xu hướng MEAN và MEDIAN
+value_metrics = [
+    "mean_quantity",
+    "median_quantity",
+    "mean_unit_price",
+    "median_unit_price",
+    "mean_sale_amount",
+    "median_sale_amount",
+]
+
+figure, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# Biểu đồ 1: So sánh các chỉ đố đếm trước & sau khi làm sạch
+comparison_table[comparison_table["metric"].isin(count_metrics)].set_index("metric")[
+    ["before_clean", "after_clean"]
+].plot(kind="bar", ax=axes[0], color=["#d97706", "#15803d"])
+axes[0].set_title("Count Metrics")
+axes[0].set_xlabel("")
+axes[0].set_ylabel("Count")
+axes[0].tick_params(axis="x", rotation=0)
+
+# Biểu đồ 2: So sánh MEAN (average) và MEDIAN trước & sau khi làm sạch
+comparison_table[comparison_table["metric"].isin(value_metrics)].set_index("metric")[
+    ["before_clean", "after_clean"]
+].plot(kind="bar", ax=axes[1], color=["#2563eb", "#16a34a"])
+axes[1].set_title("Mean and Median")
+axes[1].set_xlabel("")
+axes[1].set_ylabel("Value")
+axes[1].tick_params(axis="x", rotation=45)
+
+plt.tight_layout()
+plt.show()
+```
+
+Kết quả trả về: 
+<p align = "center">
+    <img src = "image-2.png">
+</p>
+
+7. 
+
+```python
+output_folder = Path("/content/output")
+output_folder.mkdir(parents=True, exist_ok=True)
+
+# Dinh dang lai cot ngay gio truoc khi xuat CSV.
+export_data = clean_data.copy()
+export_data["InvoiceDate"] = export_data["InvoiceDate"].dt.strftime("%Y-%m-%d %H:%M:%S")
+
+export_data.to_csv(
+    output_folder / "online_retail_clean.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+comparison_table.to_csv(
+    output_folder / "before_after_summary.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+removed_table.to_csv(
+    output_folder / "dropped_reason_summary.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+
+list(output_folder.iterdir())
 ```
