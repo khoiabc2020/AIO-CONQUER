@@ -50,7 +50,11 @@ Phân biệt *cleaning* và *transformation*
 |Ví dụ|Trim, Remove Duplicates, Replace Null|Unpivot, Group By, Split Column, Merge|
 
 ### 2.2. Tư duy xử lý dữ liệu giữa GUI và Code
-
+1. Tư duy GUI (Power Query)
+Tư duy GUI trong Power Query tập trung vào tính trực quan thông qua quy trình Get & Transform
+    - Ghi lại lịch sử (*Applied Steps*): Thay vì viết code, mọi thao tác (như lọc null, đổi định dạng) đều được ghi lại thành các bước thực hiện
+. Điều này giúp người dùng không chuyên cũng có thể hiểu và kiểm soát luồng xử lý dữ liệu.
+    - Phân tích nhanh (*Efficiency*): GUI cực kỳ hiệu quả cho dữ liệu vừa và nhỏ (dưới 1 triệu dòng), cho phép tạo báo cáo chỉ trong 2-3 tiếng
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
 1. **Power Query (ETL)**
