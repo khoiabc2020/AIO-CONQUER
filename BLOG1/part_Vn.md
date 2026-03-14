@@ -1,13 +1,16 @@
 ## 1. Bối cảnh dữ liệu bán lẻ và khái niệm GIGO 
 ### 1.1. Bối cảnh
-Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành yếu tố cốt lõi giúp doanh nghiệp đưa ra quyết định kinh doanh và tạo lợi thế cạnh tranh. Sự phát triển của mô hình bán lẻ hợp kênh (Omnichannel) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn khác nhau như hệ thống điểm bán hàng (POS), thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, sự gia tăng nhanh chóng về khối lượng, tốc độ và đa dạng của dữ liệu cũng làm gia tăng rủi ro về tính chính xác và nhất quán. 
+Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành yếu tố cốt lõi giúp doanh nghiệp đưa ra quyết định kinh doanh và tạo lợi thế cạnh tranh. 
+Sự phát triển của mô hình bán lẻ hợp kênh (*Omnichannel*) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn khác nhau như hệ thống điểm bán hàng (POS), thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, sự gia tăng nhanh chóng về khối lượng, tốc độ và đa dạng của dữ liệu cũng làm gia tăng rủi ro về tính chính xác và nhất quán. 
 
 Tại Việt Nam, quá trình chuyển đổi sang bán lẻ hợp kênh đang diễn ra mạnh mẽ. Nhiều doanh nghiệp đã tích hợp dữ liệu từ cửa hàng vật lý và nền tảng trực tuyến nhằm xây dựng hồ sơ khách hàng toàn diện và tối ưu vận hành. Mặc dù vậy, tình trạng phân mảnh dữ liệu giữa các kênh vẫn là thách thức lớn, dẫn đến sai lệch trong dự báo nhu cầu, quản lý tồn kho và hoạch định chiến lược kinh doanh.
 
 ### 1.2. Khái niệm GIGO
-Khái niệm "Garbage In, Garbage Out" (GIGO) là một nguyên lý nền tảng trong khoa học máy tính và phân tích dữ liệu, nhấn mạnh rằng chất lượng đầu ra của một hệ thống phụ thuộc hoàn toàn vào chất lượng đầu vào. Dù hệ thống có phức tạp hay thuật toán AI có tiên tiến đến đâu, nếu dữ liệu đầu vào bị lỗi, thiếu sót hoặc sai lệch, kết quả tạo ra sẽ là vô giá trị hoặc thậm chí gây hại. 
+Khái niệm "*Garbage In, Garbage Out*" (GIGO) là một nguyên lý nền tảng trong khoa học máy tính và phân tích dữ liệu, nhấn mạnh rằng chất lượng đầu ra của một hệ thống phụ thuộc hoàn toàn vào chất lượng đầu vào. Dù hệ thống có phức tạp hay thuật toán AI có tiên tiến đến đâu, nếu dữ liệu đầu vào bị lỗi, thiếu sót hoặc sai lệch, kết quả tạo ra sẽ là vô giá trị hoặc thậm chí gây hại. 
 
-Nguồn gốc của thuật ngữ này có sự liên hệ sâu sắc với lịch sử điện toán. Charles Babbage, người được coi là cha đẻ của máy tính, đã từng bày tỏ sự ngạc nhiên trước câu hỏi liệu một cỗ máy có thể cho ra câu trả lời đúng từ những dữ liệu sai hay không. Vào năm 1957, William D. Mellin, một chuyên gia toán học của quân đội Mỹ, đã khẳng định rằng máy tính không thể tự suy nghĩ và các đầu vào "lập trình cẩu thả" sẽ dẫn đến kết quả sai. Đến thập niên 1960, George Fuechsel của IBM đã phổ biến rộng rãi cụm từ này để giáo dục người dùng về tầm quan trọng của tính chính xác trong nhập liệu.
+Nguồn gốc của thuật ngữ này có sự liên hệ sâu sắc với lịch sử điện toán. Charles Babbage, người được coi là cha đẻ của máy tính, đã từng bày tỏ sự ngạc nhiên trước câu hỏi liệu một cỗ máy có thể cho ra câu trả lời đúng từ những dữ liệu sai hay không. 
+Vào năm 1957, William D. Mellin, một chuyên gia toán học của quân đội Mỹ, đã khẳng định rằng máy tính không thể tự suy nghĩ và các đầu vào "lập trình cẩu thả" sẽ dẫn đến kết quả sai. 
+Đến thập niên 1960, George Fuechsel của IBM đã phổ biến rộng rãi cụm từ này để giáo dục người dùng về tầm quan trọng của tính chính xác trong nhập liệu.
 
 ## 2. Vai trò của Data cleaning
 ### 2.1. Khái niệm của Data cleaning
@@ -133,6 +136,8 @@ Bảng đối soát hiệu quả:
 ### 3.3. Python 
 Sử dụng Python để kiểm chứng lại toàn bộ Pipeline của Power Query, đảm bảo tính khách quan 
 
+1. **Chuẩn bị** 
+
 Các thư viện 
 ```python
 from pathlib import Path
@@ -155,3 +160,129 @@ raw_data = pd.read_excel(input_path, engine = "xlrd")
 
 Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 
+2. **Cách đặt tên cột**
+Đặt tên cột không có khoảng trắng: 
+    - NameName 
+    - Name_Name
+
+```python
+TEXT_COLUMNS = ["InvoiceNo", "StockCode", "Description", "Country"]
+
+# Đưa vào giá trị mỗi cột --> Hợp lệ
+REQUIRED_COLUMNS = [
+    "InvoiceNo",
+    "StockCode",
+    "Description",
+    "Quantity",
+    "InvoiceDate",
+    "UnitPrice",
+    "Country",
+]
+```
+
+3. **Chuẩn hóa dữ liệu**
+
+```python 
+def normalize_text(text_series: pd.Series) -> pd.Series:
+    return (
+        # Chuyển về string
+        text_series.astype("string")
+        # Xóa khoảng trắng thừa 
+        .str.replace(r"\s+", " ", regex=True)
+        .str.strip()
+        # Đưa ra giá trị rỗng về NaN 
+        .replace({"": pd.NA, "<NA>": pd.NA})
+    )
+
+
+def build_report(data_frame: pd.DataFrame) -> pd.DataFrame:
+    # Tao bang chi so de so sanh du lieu truoc va sau khi lam sach.
+    summary_values = {
+        "total_rows": len(data_frame),
+        "missing_customer_id": data_frame["CustomerID"].isna().sum(),
+        "cancelled_invoices": data_frame["InvoiceNo"].str.startswith("C", na=False).sum(),
+        "non_positive_quantity": data_frame["Quantity"].le(0).sum(),
+        "non_positive_unit_price": data_frame["UnitPrice"].le(0).sum(),
+        "duplicate_rows": data_frame.duplicated().sum(),
+        "gross_sales": round(data_frame["SaleAmount"].fillna(0).sum(), 2),
+        "mean_quantity": round(data_frame["Quantity"].dropna().mean(), 2),
+        "median_quantity": round(data_frame["Quantity"].dropna().median(), 2),
+        "mean_unit_price": round(data_frame["UnitPrice"].dropna().mean(), 2),
+        "median_unit_price": round(data_frame["UnitPrice"].dropna().median(), 2),
+        "mean_sale_amount": round(data_frame["SaleAmount"].dropna().mean(), 2),
+        "median_sale_amount": round(data_frame["SaleAmount"].dropna().median(), 2),
+    }
+
+    return pd.DataFrame(summary_values.items(), columns=["metric", "value"])
+
+
+def clean_online_retail(raw_data: pd.DataFrame):
+    # Sao chep du lieu goc de tranh sua truc tiep len du lieu ban dau.
+    cleaned_data = raw_data.copy()
+
+    # Lam sach cac cot text truoc de tranh trung lap gia do khoang trang an.
+    for column_name in TEXT_COLUMNS:
+        cleaned_data[column_name] = normalize_text(cleaned_data[column_name])
+
+    # Chuan hoa ma khach hang ve dang text don gian.
+    cleaned_data["CustomerID"] = normalize_text(cleaned_data["CustomerID"]).str.replace(
+        r"\.0$", "", regex=True
+    )
+
+    # Dua cac cot so va ngay thang ve dung kieu du lieu.
+    cleaned_data["Quantity"] = pd.to_numeric(
+        cleaned_data["Quantity"], errors="coerce"
+    ).astype("Int64")
+    cleaned_data["UnitPrice"] = pd.to_numeric(cleaned_data["UnitPrice"], errors="coerce")
+    cleaned_data["InvoiceDate"] = pd.to_datetime(
+        cleaned_data["InvoiceDate"], errors="coerce"
+    )
+
+    # Tinh gia tri dong hang de phuc vu thong ke doanh thu.
+    cleaned_data["SaleAmount"] = (
+        cleaned_data["Quantity"].astype("float") * cleaned_data["UnitPrice"]
+    ).round(2)
+
+    # Bang thong ke truoc khi lam sach.
+    before_table = build_report(cleaned_data).rename(columns={"value": "before_clean"})
+
+    # Moi quy tac ben duoi danh dau mot nhom dong can loai bo.
+    invalid_rules = [
+        ("missing_core_fields", cleaned_data[REQUIRED_COLUMNS].isna().any(axis=1)),
+        ("missing_customer_id", cleaned_data["CustomerID"].isna()),
+        ("cancelled_invoices", cleaned_data["InvoiceNo"].str.startswith("C", na=False)),
+        ("non_positive_quantity", cleaned_data["Quantity"].le(0)),
+        ("non_positive_unit_price", cleaned_data["UnitPrice"].le(0)),
+    ]
+
+    # Ban dau, tat ca cac dong deu duoc giu lai.
+    keep_row = pd.Series(True, index=cleaned_data.index)
+    removed_rows = []
+
+    # Ap dung tung quy tac theo thu tu de thong ke so dong bi loai ro rang hon.
+    for rule_name, invalid_row in invalid_rules:
+        current_removed_row = keep_row & invalid_row
+        removed_rows.append((rule_name, int(current_removed_row.sum())))
+        keep_row &= ~invalid_row
+
+    # Loai bo trung lap sau khi da loc cac dong loi.
+    final_data = cleaned_data.loc[keep_row].drop_duplicates().copy()
+    duplicate_rows = int(cleaned_data.loc[keep_row].duplicated().sum())
+
+    # Sap xep lai de du lieu nhin gon va on dinh hon.
+    final_data = final_data.sort_values(
+        ["InvoiceDate", "InvoiceNo", "StockCode"]
+    ).reset_index(drop=True)
+
+    # Bang thong ke sau khi lam sach.
+    after_table = build_report(final_data).rename(columns={"value": "after_clean"})
+    comparison_table = before_table.merge(after_table, on="metric")
+
+    # Bang so dong bi loai theo tung ly do.
+    removed_table = pd.DataFrame(
+        removed_rows + [("duplicate_rows", duplicate_rows)],
+        columns=["reason", "rows_dropped"],
+    )
+
+    return final_data, comparison_table, removed_table
+```
