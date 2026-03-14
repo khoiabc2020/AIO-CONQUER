@@ -82,7 +82,7 @@ So sánh tư duy xử lý dữ liệu giữa *GUI* (Power Query) và *Code* (SQL
 |Giới hạn|Tối ưu cho < 1 triệu dòng|Xử lý dữ liệu cực lớn (Big Data)|
 |Độ linh hoạt|Thao tác theo tính năng có sẵn|Tùy biến logic cực cao qua hàm|
 
-### 2.3. Bảng thuật ngữ Anh-Việt.
+### 2.4. Bảng thuật ngữ Anh-Việt.
 
 |Thuật ngữ Anh|Thuật ngữ Việt|Ý nghĩa kỹ thuật|
 |---|---|---|
