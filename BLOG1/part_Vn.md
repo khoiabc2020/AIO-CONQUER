@@ -189,8 +189,8 @@ in
 Sử dụng bộ công cụ *Descriptive Statistics* trong Excel để giải mã các con số đằng sau tập dữ liệu đã sạch.
 
 Chỉ số mô tả chuyên sâu:
-|Chỉ số|Giá trị|Phân tích chuyên sâu|Ý nghĩa|
-|---|---|---|---|
+|Chỉ số|Giá trị|Phân tích chuyên sâu
+|---|---|---|
 |MEAN|$22.39|Giá trị doanh thu trung bình trên mỗi dòng sản phẩm|
 |MEDIAN|$12.30|Điểm trung tâm thực sự của dữ liệu, phản ánh khách lẻ bình thường|
 |Std Dev $$\sigma $$|$165.05|TĐộ lệch chuẩn phản ánh mức độ dao động mạnh giữa các mã hàng|
