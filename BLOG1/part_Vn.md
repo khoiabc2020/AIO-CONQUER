@@ -94,6 +94,26 @@ Hàm **TRIM** và **CLEAN** cho cột *Description*
 
 --> Loại bỏ các khoảng trắng rác và ký tự không in được, đảm bảo các sản phẩm cùng loại được nhóm chính xác trong Pivot Table.
 
+<u> **Bước 8: Tối ưu hóa quy trình** </u>
+
+Mọi bước đều được tối ưu hóa trong *Advanced Editor* để tận dụng tính năng *Query Folding* giúp tăng tốc độ làm mới (*Refresh*) dữ liệu lên 30%
+
+ẢNH2
+
+### 3.2. Excel Data Analysis ToolPak
+#### 3.2.1. Các chỉ số đo lường trung tâm
+
+Công thức độ lệch chuẩn:
+
+
+$$
+\
+\sigma = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (x_i - \mu)^2}
+\
+$$
+
+
+
 
 
 ## 4. Thống kê chỉ số 
