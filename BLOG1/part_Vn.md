@@ -1,9 +1,10 @@
 ## 1. Bối cảnh dữ liệu bán lẻ và khái niệm GIGO 
 ### 1.1. Bối cảnh
-Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành yếu tố cốt lõi giúp doanh nghiệp đưa ra quyết định kinh doanh và tạo lợi thế cạnh tranh. 
-Sự phát triển của mô hình bán lẻ hợp kênh (*Omnichannel*) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn khác nhau như hệ thống điểm bán hàng (POS), thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, sự gia tăng nhanh chóng về khối lượng, tốc độ và đa dạng của dữ liệu cũng làm gia tăng rủi ro về tính chính xác và nhất quán. 
+Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành tài sản cốt lõi giúp doanh nghiệp ra quyết định nhanh hơn, chính xác hơn và tạo lợi thế cạnh tranh bền vững. Sự phát triển của mô hình bán lẻ hợp kênh (Omnichannel) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn như hệ thống điểm bán hàng (POS), nền tảng thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, khi khối lượng, tốc độ và mức độ đa dạng của dữ liệu tăng lên, rủi ro về sai lệch, thiếu hụt và không nhất quán cũng tăng theo.. 
 
 Tại Việt Nam, quá trình chuyển đổi sang bán lẻ hợp kênh đang diễn ra mạnh mẽ. Nhiều doanh nghiệp đã tích hợp dữ liệu từ cửa hàng vật lý và nền tảng trực tuyến nhằm xây dựng hồ sơ khách hàng toàn diện và tối ưu vận hành. Mặc dù vậy, tình trạng phân mảnh dữ liệu giữa các kênh vẫn là thách thức lớn, dẫn đến sai lệch trong dự báo nhu cầu, quản lý tồn kho và hoạch định chiến lược kinh doanh.
+
+Trong bối cảnh đó, chất lượng dữ liệu trở thành điều kiện tiên quyết. Một hệ thống phân tích hiện đại sẽ không thể tạo ra kết quả đáng tin cậy nếu dữ liệu đầu vào chứa quá nhiều lỗi. Đây cũng là lý do khái niệm GIGO có ý nghĩa đặc biệt quan trọng trong phân tích dữ liệu.
 
 ### 1.2. Khái niệm GIGO
 Khái niệm "*Garbage In, Garbage Out*" (GIGO) là một nguyên lý nền tảng trong khoa học máy tính và phân tích dữ liệu, nhấn mạnh rằng chất lượng đầu ra của một hệ thống phụ thuộc hoàn toàn vào chất lượng đầu vào. Dù hệ thống có phức tạp hay thuật toán AI có tiên tiến đến đâu, nếu dữ liệu đầu vào bị lỗi, thiếu sót hoặc sai lệch, kết quả tạo ra sẽ là vô giá trị hoặc thậm chí gây hại. 
