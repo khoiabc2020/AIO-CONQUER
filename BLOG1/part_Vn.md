@@ -1,42 +1,113 @@
-## 1. Bối cảnh dữ liệu bán lẻ và khái niệm GIGO 
-### 1.1. Bối cảnh
-Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành yếu tố cốt lõi giúp doanh nghiệp đưa ra quyết định kinh doanh và tạo lợi thế cạnh tranh. 
-Sự phát triển của mô hình bán lẻ hợp kênh (*Omnichannel*) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn khác nhau như hệ thống điểm bán hàng (POS), thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, sự gia tăng nhanh chóng về khối lượng, tốc độ và đa dạng của dữ liệu cũng làm gia tăng rủi ro về tính chính xác và nhất quán. 
+# 1. Bối cảnh dữ liệu bán lẻ và khái niệm GIGO
 
-Tại Việt Nam, quá trình chuyển đổi sang bán lẻ hợp kênh đang diễn ra mạnh mẽ. Nhiều doanh nghiệp đã tích hợp dữ liệu từ cửa hàng vật lý và nền tảng trực tuyến nhằm xây dựng hồ sơ khách hàng toàn diện và tối ưu vận hành. Mặc dù vậy, tình trạng phân mảnh dữ liệu giữa các kênh vẫn là thách thức lớn, dẫn đến sai lệch trong dự báo nhu cầu, quản lý tồn kho và hoạch định chiến lược kinh doanh.
+## 1.1. Bối cảnh
 
-### 1.2. Khái niệm GIGO
-Khái niệm "*Garbage In, Garbage Out*" (GIGO) là một nguyên lý nền tảng trong khoa học máy tính và phân tích dữ liệu, nhấn mạnh rằng chất lượng đầu ra của một hệ thống phụ thuộc hoàn toàn vào chất lượng đầu vào. Dù hệ thống có phức tạp hay thuật toán AI có tiên tiến đến đâu, nếu dữ liệu đầu vào bị lỗi, thiếu sót hoặc sai lệch, kết quả tạo ra sẽ là vô giá trị hoặc thậm chí gây hại. 
+Ngành bán lẻ hiện đại đang bước vào kỷ nguyên số, nơi dữ liệu trở thành tài sản cốt lõi giúp doanh nghiệp ra quyết định nhanh hơn, chính xác hơn và tạo lợi thế cạnh tranh bền vững. Sự phát triển của mô hình bán lẻ hợp kênh (*omnichannel*) khiến dữ liệu được tạo ra liên tục từ nhiều nguồn như hệ thống điểm bán hàng (POS), nền tảng thương mại điện tử, chương trình khách hàng thân thiết và hệ thống quản lý tồn kho. Tuy nhiên, khi khối lượng, tốc độ và mức độ đa dạng của dữ liệu tăng lên, rủi ro về sai lệch, thiếu hụt và không nhất quán cũng tăng theo.
 
-Nguồn gốc của thuật ngữ này có sự liên hệ sâu sắc với lịch sử điện toán. Charles Babbage, người được coi là cha đẻ của máy tính, đã từng bày tỏ sự ngạc nhiên trước câu hỏi liệu một cỗ máy có thể cho ra câu trả lời đúng từ những dữ liệu sai hay không. 
-Vào năm 1957, William D. Mellin, một chuyên gia toán học của quân đội Mỹ, đã khẳng định rằng máy tính không thể tự suy nghĩ và các đầu vào "lập trình cẩu thả" sẽ dẫn đến kết quả sai. 
-Đến thập niên 1960, George Fuechsel của IBM đã phổ biến rộng rãi cụm từ này để giáo dục người dùng về tầm quan trọng của tính chính xác trong nhập liệu.
+Tại Việt Nam, quá trình chuyển đổi sang bán lẻ hợp kênh đang diễn ra mạnh mẽ. Nhiều doanh nghiệp đã bắt đầu tích hợp dữ liệu từ cửa hàng vật lý và nền tảng trực tuyến để xây dựng chân dung khách hàng toàn diện, tối ưu tồn kho và cải thiện trải nghiệm mua sắm. Dù vậy, dữ liệu giữa các kênh vẫn thường bị phân mảnh, dẫn đến khó khăn trong việc đồng bộ thông tin, dự báo nhu cầu và hoạch định chiến lược kinh doanh.
 
-## 2. Vai trò của Data cleaning
-### 2.1. Khái niệm của Data cleaning
-Thuật ngữ *Data cleaning* chỉ quá trình xử lý dữ liệu để làm sạch bộ dữ liệu thô. Các thao tác *cleaning* hướng đến cải thiện chất lượng và khả năng sử dụng của dữ liệu một cách nhất quán.
+Trong bối cảnh đó, chất lượng dữ liệu trở thành điều kiện tiên quyết. Một hệ thống phân tích hiện đại sẽ không thể tạo ra kết quả đáng tin cậy nếu dữ liệu đầu vào chứa quá nhiều lỗi. Đây cũng là lý do khái niệm GIGO có ý nghĩa đặc biệt quan trọng trong phân tích dữ liệu.
 
-Tầm quan trọng của làm sạch dữ liệu trong các lĩnh vực khác nhau:
-1. Phân tích dữ liệu:
-    - Đảm bảo tính chính xác trong đưa ra các quyết định quan trọng: Tính toàn vẹn của kết luận phụ thuộc vào độ sạch của dữ liệu.
-    - Giảm thiểu sai lệch trong quá trình phân tích, đặc biệt trong nghiên cứu và phát triển khoa học, doanh nghiệp,...
-2. Khoa học dữ liệu:
-    - Chiếm 60-80% thời gian, công sức của dự án 
-    - Giúp các nhà khoa học xây dựng mô hình có độ tin cậy cao. 
-    - Tối ưu các thuật toán: cả về chi phí, thời gian.
-3. Học máy:
-    - Nền tảng xây dựng mô hình học máy (*Machine Learning*) hiệu quả.
-    - Cải thiện khả năng tổng quan trên dữ liệu mới.
-    - Giảm thiểu rủi ro quá khớp (*overfitting*). 
+## 1.2. Khái niệm GIGO
 
-Phân biệt *cleaning* và *transformation*
-|Đặc điểm|Cleaning|Transformation|
+GIGO là viết tắt của cụm từ *Garbage In, Garbage Out*, nghĩa là “đầu vào rác thì đầu ra cũng sẽ là rác”. Đây là một nguyên lý nền tảng trong khoa học máy tính và phân tích dữ liệu, nhấn mạnh rằng chất lượng kết quả của hệ thống phụ thuộc trực tiếp vào chất lượng dữ liệu đầu vào. Dù thuật toán có tiên tiến đến đâu, nếu dữ liệu đầu vào sai, thiếu hoặc nhiễu, kết quả đầu ra vẫn có thể vô nghĩa hoặc gây ra quyết định sai lầm.
+
+Về mặt lịch sử, tư tưởng của GIGO đã xuất hiện từ rất sớm trong quá trình phát triển ngành điện toán. Charles Babbage từng đặt ra vấn đề rằng một cỗ máy không thể tạo ra câu trả lời đúng nếu dữ liệu đầu vào vốn đã sai. Sau này, vào năm 1957, William D. Mellin tiếp tục nhấn mạnh rằng máy tính không thể “tự suy nghĩ” để sửa lỗi cho con người. Đến thập niên 1960, George Fuechsel của IBM đã phổ biến rộng rãi thuật ngữ GIGO nhằm giáo dục người dùng về tầm quan trọng của nhập liệu chính xác.
+
+Nói cách khác, GIGO không chỉ là một khẩu hiệu kỹ thuật mà còn là nguyên tắc cốt lõi của mọi hệ thống phân tích hiện đại. Muốn có báo cáo đúng, mô hình tốt và quyết định đáng tin cậy, doanh nghiệp phải bắt đầu từ việc làm sạch dữ liệu đầu vào.
+
+# 2. Vai trò của Data Cleaning
+
+## 2.1. Khái niệm của Data Cleaning
+
+*Data cleaning* là quá trình làm sạch dữ liệu thô nhằm nâng cao chất lượng, tính nhất quán và khả năng sử dụng của dữ liệu. Trong thực tế, dữ liệu thu thập từ nhiều hệ thống thường tồn tại nhiều vấn đề như giá trị bị thiếu, dữ liệu trùng lặp, sai định dạng, dữ liệu không hợp lệ hoặc chứa nhiễu không liên quan. Nếu không được xử lý, các lỗi này sẽ ảnh hưởng trực tiếp đến độ chính xác của phân tích và độ tin cậy của quyết định.
+
+Quá trình làm sạch dữ liệu giúp biến một tập dữ liệu thô thành tập dữ liệu có thể sử dụng một cách đáng tin cậy trong phân tích, báo cáo và mô hình hóa. Đây là bước không thể thiếu trong hầu hết các dự án phân tích dữ liệu, khoa học dữ liệu và học máy.
+
+### Tầm quan trọng của làm sạch dữ liệu
+
+**Trong phân tích dữ liệu**, làm sạch dữ liệu giúp đảm bảo rằng các kết luận được rút ra phản ánh đúng thực tế. Dữ liệu càng sạch thì sai lệch trong báo cáo và quá trình ra quyết định càng giảm.
+
+**Trong khoa học dữ liệu**, làm sạch dữ liệu thường chiếm phần lớn thời gian và công sức của dự án. Một bộ dữ liệu chất lượng cao giúp nhà phân tích tiết kiệm thời gian xử lý lỗi, đồng thời cải thiện hiệu quả của toàn bộ quy trình.
+
+**Trong học máy**, dữ liệu sạch là nền tảng để xây dựng mô hình có độ tin cậy cao. Dữ liệu tốt giúp mô hình học đúng quy luật, cải thiện khả năng dự đoán trên dữ liệu mới và giảm rủi ro quá khớp (*overfitting*).
+
+### Năm tiêu chuẩn đánh giá chất lượng dữ liệu sau khi làm sạch
+
+- **Accuracy (Tính chính xác):** Dữ liệu phải phản ánh đúng thực tế.  
+  Ví dụ: đơn giá trong bộ dữ liệu *Online Retail* phải khớp với giá bán thực tế.
+
+- **Completeness (Tính đầy đủ):** Dữ liệu cần có đủ thông tin phục vụ mục tiêu phân tích.  
+  Ví dụ: thiếu *CustomerID* sẽ làm gián đoạn phân tích hành vi khách hàng.
+
+- **Consistency (Tính nhất quán):** Dữ liệu phải đồng nhất giữa các bảng và các nguồn.  
+  Ví dụ: định dạng ngày tháng hoặc tên quốc gia không được mâu thuẫn giữa các tệp.
+
+- **Validity (Tính hợp lệ):** Dữ liệu phải tuân thủ quy tắc nghiệp vụ.  
+  Ví dụ: cột *Quantity* phải có giá trị hợp lệ theo mục tiêu phân tích.
+
+- **Timeliness (Tính kịp thời):** Dữ liệu phải được cập nhật đúng thời điểm cần sử dụng.  
+  Dữ liệu quá cũ có thể không còn phản ánh đúng tình hình hiện tại.
+
+## 2.2. Phân biệt *Cleaning* và *Transformation*
+
+Mặc dù thường đi cùng nhau trong một pipeline xử lý dữ liệu, *cleaning* và *transformation* là hai khái niệm khác nhau.
+
+| Đặc điểm | Cleaning | Transformation |
 |---|---|---|
-|Mục tiêu|Đảm bảo dữ liệu đầy đủ, chính xác|Chuyển cấu trúc dữ liệu sang dạng phù hợp hơn cho phân tích|
-|Hoạt động chính|- Sửa lỗi nhập liệu: sai chính tả, thiếu dữ liệu - Loại bỏ sự trùng lặp - Loại bỏ số liệu không hợp lệ (NaN, số âm) - Loại bỏ dữ liệu nhiễu (không liên quan)|- Chuẩn hóa đơn vị đo - Dùng Pivot/Unipivot để thay đổi cấu trúc - Áp dụng các phép toán chuẩn hóa dữ liệu về cùng thang đo - Tạo biến mới từ dữ liệu gốc|
-|Ví dụ|||
+| Mục tiêu | Làm dữ liệu sạch, chính xác, ít lỗi | Chuyển dữ liệu sang cấu trúc phù hợp hơn cho phân tích |
+| Hoạt động chính | Xử lý thiếu dữ liệu, trùng lặp, lỗi định dạng, giá trị không hợp lệ | Chuẩn hóa đơn vị, tạo biến mới, đổi cấu trúc bảng, gộp hoặc tách cột |
+| Kết quả | Dữ liệu giảm “rác”, tăng độ tin cậy | Dữ liệu sẵn sàng cho báo cáo, trực quan hóa hoặc mô hình hóa |
+| Ví dụ | Trim, Remove Duplicates, Replace Null | Unpivot, Group By, Split Column, Merge |
 
-### 2.2. Tư duy xử lý dữ liệu giữa GUI và Code
+Nói ngắn gọn, *cleaning* tập trung vào việc sửa lỗi và loại bỏ vấn đề trong dữ liệu, còn *transformation* tập trung vào việc tổ chức lại dữ liệu để phục vụ mục tiêu phân tích tốt hơn.
+
+## 2.3. Tư duy xử lý dữ liệu giữa *GUI* và *Code*
+
+Trong thực tế, xử lý dữ liệu có thể được thực hiện theo hai hướng chính: dùng giao diện trực quan (*GUI*) hoặc dùng ngôn ngữ lập trình (*Code*).
+
+### Tư duy GUI (Power Query)
+
+Với Power Query, người dùng thao tác trực tiếp qua giao diện và hệ thống sẽ ghi lại toàn bộ quy trình dưới dạng *Applied Steps*. Cách tiếp cận này có ưu điểm là trực quan, dễ học, phù hợp với người dùng không chuyên lập trình và rất hiệu quả trong các bài toán dữ liệu vừa và nhỏ. Khi có dữ liệu mới, chỉ cần bấm *Refresh* để chạy lại toàn bộ quy trình đã lưu.
+
+### Tư duy Code (SQL/Pandas)
+
+Khác với GUI, tư duy code tập trung vào việc xây dựng logic xử lý dữ liệu bằng câu lệnh và hàm. Cách tiếp cận này linh hoạt hơn, phù hợp với dữ liệu lớn, yêu cầu logic phức tạp hoặc cần tự động hóa sâu. Với SQL hay Pandas, người dùng có thể xử lý dữ liệu từ nhiều nguồn, tích hợp API, kết nối cloud và mở rộng pipeline ở mức cao hơn.
+
+### So sánh GUI và Code
+
+| Đặc điểm | GUI (Power Query) | Code (SQL/Pandas) |
+|---|---|---|
+| Cách tiếp cận | Tương tác trực quan trên giao diện | Xây dựng logic bằng mã lệnh |
+| Lịch sử xử lý | Tự động lưu dưới dạng *Applied Steps* | Lưu trong file code như `.sql`, `.py` |
+| Quy mô phù hợp | Dữ liệu vừa và nhỏ | Dữ liệu lớn, logic phức tạp |
+| Độ linh hoạt | Phụ thuộc tính năng có sẵn | Tùy biến rất cao |
+| Tự động hóa | Dễ dùng, nhanh triển khai | Mạnh hơn trong hệ thống lớn |
+
+## 2.4. Bảng thuật ngữ Anh – Việt
+
+| Thuật ngữ Anh | Thuật ngữ Việt | Ý nghĩa kỹ thuật |
+|---|---|---|
+| Raw Data | Dữ liệu thô | Dữ liệu chưa qua xử lý, còn nhiều sai sót |
+| Missing Data | Dữ liệu thiếu | Các ô trống hoặc giá trị null |
+| Duplicates | Dữ liệu trùng lặp | Các bản ghi lặp lại không mong muốn |
+| Outliers | Giá trị ngoại lai | Các giá trị bất thường so với phần còn lại |
+| Invalid Values | Giá trị không hợp lệ | Dữ liệu sai định dạng hoặc sai quy tắc |
+| Data Profiling | Phân tích hồ sơ dữ liệu | Kiểm tra đặc điểm và chất lượng dữ liệu trước khi làm sạch |
+| Applied Steps | Các bước đã thực hiện | Lịch sử thao tác trong Power Query |
+| Unpivot | Hủy xoay cột | Chuyển dữ liệu từ dạng ngang sang dạng dọc |
+| Data Transformation | Biến đổi dữ liệu | Thay đổi cấu trúc hoặc định dạng dữ liệu |
+| Data Pipeline | Luồng xử lý dữ liệu | Chuỗi các bước xử lý từ thu thập đến phân tích |
+| Data Quality | Chất lượng dữ liệu | Mức độ đáng tin cậy và sử dụng được của dữ liệu |
+| Accuracy | Tính chính xác | Dữ liệu phản ánh đúng thực tế |
+| Completeness | Tính đầy đủ | Dữ liệu có đủ thông tin cần thiết |
+| Consistency | Tính nhất quán | Dữ liệu đồng nhất giữa các nguồn |
+| Validity | Tính hợp lệ | Dữ liệu đúng định dạng và quy tắc |
+| Timeliness | Tính kịp thời | Dữ liệu được cập nhật đúng thời điểm |
+| Data Analysis | Phân tích dữ liệu | Quá trình khai thác dữ liệu để rút ra thông tin |
+| Machine Learning | Học máy | Thuật toán giúp máy tính học từ dữ liệu |
+
+Từ những cơ sở trên có thể thấy rằng làm sạch dữ liệu không chỉ là bước kỹ thuật ban đầu mà còn là nền tảng cho toàn bộ quá trình phân tích. Sau khi hiểu rõ bản chất của dữ liệu bẩn, vai trò của *data cleaning* và các cách tiếp cận xử lý, phần tiếp theo sẽ trình bày các công cụ phổ biến dùng để làm sạch dữ liệu trong thực tế.
 
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
