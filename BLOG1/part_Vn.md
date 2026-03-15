@@ -58,7 +58,7 @@ Quá trình làm sạch dữ liệu giúp đảm bảo rằng dữ liệu có th
 |Ví dụ|Trim, Remove Duplicates, Replace Null|Unpivot, Group By, Split Column, Merge|
 
 ### 2.3. Tư duy xử lý dữ liệu giữa *GUI* và *Code*
-Trong thực tế, quá trình xử lý dữ liệu có thể được thực hiện thông qua hai cách tiếp cận chính: sử dụng giao diện trực quan (GUI) hoặc sử dụng ngôn ngữ lập trình (Code)
+Trong thực tế, quá trình xử lý dữ liệu có thể được thực hiện thông qua hai cách tiếp cận chính: sử dụng giao diện trực quan (*GUI*) hoặc sử dụng ngôn ngữ lập trình (*Code*)
 
 <u> **Tư duy GUI (Power Query)** </u>
 
@@ -107,6 +107,11 @@ Validity|Tính hợp lệ|Dữ liệu đúng định dạng và quy tắc|
 Timeliness|Tính kịp thời|Dữ liệu được cập nhật đúng thời điểm|
 Data Analysis|Phân tích dữ liệu|Quá trình khám phá dữ liệu để rút ra thông tin|
 Machine Learning|Học máy|Thuật toán giúp máy tính học từ dữ liệu|
+ETL|Quy trình ETL|Extract – Transform – Load: trích xuất, biến đổi và nạp dữ liệu|
+Null|Giá trị rỗng|Giá trị không tồn tại trong dữ liệu|
+Pivot|Xoay bảng|Chuyển dữ liệu từ dạng dọc sang dạng ngang|
+Query|Truy vấn|Lệnh hoặc quá trình lấy dữ liệu từ nguồn|
+Conditional Column|Cột điều kiện|Cột được tạo dựa trên logic điều kiện|
 
 ## 3. Các công cụ làm sạch dữ liệu
 Một số công cụ phổ biến và hiệu quả:
