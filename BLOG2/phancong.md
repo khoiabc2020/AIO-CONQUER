@@ -1,7 +1,7 @@
 
 # PHÂN CÔNG THỰC HIỆN BLOG: DỰ ĐOÁN KHÁCH HÀNG RỜI BỎ (CHURN PREDICTION)
 
-**Dataset:** Telco Customer Churn (Kaggle)  
+**Dataset:** [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 **Hình thức:** Blog phân tích dữ liệu và mô hình Machine Learning  
 **Mục tiêu:** Xây dựng một blog ngắn gọn, logic, có dữ liệu, có mô hình, có ứng dụng thực tế
 
