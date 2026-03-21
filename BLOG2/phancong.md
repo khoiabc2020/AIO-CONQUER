@@ -6,7 +6,6 @@
 **Mục tiêu:** Xây dựng một blog ngắn gọn, logic, có dữ liệu, có mô hình, có ứng dụng thực tế
 
 ---
-
 # 1. MỞ ĐẦU: BÀI TOÁN CHURN TRONG DOANH NGHIỆP
 **Người phụ trách:** **Lê Nguyễn Hải Giang**
 
