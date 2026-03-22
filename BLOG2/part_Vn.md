@@ -29,6 +29,28 @@ Phân tích tỷ lệ *Churn*
 Phân tích các yếu tố liên quan đến *Churn*
 
 ## 2.2. Xây dựng biểu đồ
+```python
+tenure_mean = doc_file['tenure'].mean()
+
+doc_file['tenure'].plot(
+    kind = "hist",
+    bins = 10,
+    title = "Bảng thời gian khách hàng ở lại theo Churn",
+    xlabel = "Tháng",
+    ylabel = "Số lượng",
+    figsize=(8, 5),
+    alpha = 0.2,
+    grid = True,
+    edgecolor = 'black'
+)
+
+plt.axvline(tenure_mean, color = 'red', linestyle = '--', linewidth = 2)
+plt.text(tenure_mean+1, plt.ylim()[1]*0.9, f'Mean = {tenure_mean:.2f}', color = 'red', fontsize = 11)
+plt.show()
+```
+<p align = "center">
+    <img src = "Screenshot 2026-03-22 210619.png" alt = "In ra kết quả"width = "700"/>
+</p>
 
 # 3. Tiền xử lý dữ liệu
 
@@ -64,28 +86,8 @@ col_nums = ['MonthlyCharges', 'tenure', 'TotalCharges']
 for col in col_nums:
     doc_file[col] = pd.to_numeric(doc_file[col], errors='coerce')
 ```
-6. Báo cáo số lượng khách hàng ngừng dịch vụ
-```python
-tenure_mean = doc_file['tenure'].mean()
 
-doc_file['tenure'].plot(
-    kind = "hist",
-    bins = 10,
-    title = "Bảng thời gian khách hàng ở lại theo Churn",
-    xlabel = "Tháng",
-    ylabel = "Số lượng",
-    figsize=(8, 5),
-    alpha = 0.2,
-    grid = True,
-    edgecolor = 'black'
-)
-
-plt.axvline(tenure_mean, color = 'red', linestyle = '--', linewidth = 2)
-plt.text(tenure_mean+1, plt.ylim()[1]*0.9, f'Mean = {tenure_mean:.2f}', color = 'red', fontsize = 11)
-plt.show()
-```
-
-7. Xét số lượng kiểu kết quả điền mỗi cột
+6. Xét số lượng kiểu kết quả điền mỗi cột
 Trạng thái *unique*
 ```python
 col_all_YN = ['gender', 'Partner', 'Dependents','MultipleLines', 'PhoneService', 
@@ -98,7 +100,7 @@ for x in col_all_YN:
 ```
 Kết luận: File đã clean
 
-8. Encoding 
+7. Encoding 
 Trong mã hóa dữ liệu, các dạng dữ liệu dưới dạng chữ ('text' - string) cần chuyển sang mã hóa số để mô hình Machine Learning có thể hiểu. 
 
 Ví dụ: 'NO', 'no', 'No' encode sang 0 \
@@ -290,8 +292,8 @@ print("Tạo submission thành công!")
 print(submission.head())
 ```
 <p align = "center">
-    <img src = "Screenshot 2026-03-22 205500.png" alt = "After encode"width = "300"/>
-    <img src = "Screenshot 2026-03-22 205527.png" alt = "After encode" width = "300"/>
+    <img src = "Screenshot 2026-03-22 205500.png" alt = "Đánh giá chất lượng mô hình trên mỗi lần chia"width = "300"/>
+    <img src = "Screenshot 2026-03-22 205527.png" alt = "Xác suất đạt Churn hoặc No Churn" width = "300"/>
 </p>
 
 ## 5.2. Ý nghĩa:
