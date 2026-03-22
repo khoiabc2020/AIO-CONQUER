@@ -19,14 +19,103 @@ Thông qua bài viết này, chúng ta sẽ cùng nhau:
 
 
 # 2. Khám phá dữ liệu EDA
-## 2.1. Nguồn tham khảo
-Website: Kaggle - Telco Customer Churn
 
-Nhóm biến trong dữ liệu
+## 2.1. Xây dựng EDA
+1. Thư viện
+```python
+from sklearn.compose import ColumnTransformer
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+```
+2. Cấu hình và tải dữ liệu trên Colab
+```python
+from google.colab import files
 
-Phân tích tỷ lệ *Churn*
+TEST_SIZE = 0.2
+RANDOM_STATE = 42
+PCA_COMPONENTS = 10
+
+MODEL_RESULTS_FILENAME = "model_results.csv"
+BEST_MODEL_FILENAME = "best_churn_model.joblib"
+PCA_IMPORTANCE_FILENAME = "pca_feature_importance.csv"
+RF_IMPORTANCE_FILENAME = "rf_feature_importance.csv"
+
+LOGREG_CONFIG = {"max_iter": 1000, "class_weight": "balanced"}
+TREE_CONFIG = {"random_state": RANDOM_STATE}
+RF_CONFIG = {"n_estimators": 500, "random_state": RANDOM_STATE, "n_jobs": -1, "class_weight": "balanced"}
+SVM_CONFIG = {"kernel": "linear", "probability": True, "random_state": RANDOM_STATE}
+
+def make_one_hot_encoder():
+    try:
+        return OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:
+        return OneHotEncoder(handle_unknown="ignore", sparse=False)
+
+def get_uploaded_path():
+    uploaded = files.upload()
+    if not uploaded:
+        raise ValueError("No file uploaded. Upload the CSV file to continue.")
+    return next(iter(uploaded))
+
+DATA_PATH = get_uploaded_path()
+```
+3. EDA gọn cho các biến quan trọng
 
 Phân tích các yếu tố liên quan đến *Churn*
+```python
+dataset = pd.read_csv(DATA_PATH)
+
+#Thiết kế biểu đồ 
+sns.set_theme(style="whitegrid")
+fig, axes = plt.subplots(2, 2, figsize=(14, 9))
+
+#Phân bố Churn
+sns.countplot(data=df, x="Churn", ax=axes[0, 0])
+axes[0, 0].set_title("Churn Distribution")
+
+#Thống kê loại dịch vụ viễn thông
+sns.countplot(data=df, x="Contract", hue="Churn", ax=axes[0, 1])
+axes[0, 1].set_title("Churn by Contract")
+axes[0, 1].tick_params(axis="x", rotation=15)
+
+#Thống kê dịch vụ Internet
+sns.countplot(data=df, x="InternetService", hue="Churn", ax=axes[1, 0])
+axes[1, 0].set_title("Churn by InternetService")
+axes[1, 0].tick_params(axis="x", rotation=15)
+
+#Thống kê phương thức thanh toán
+sns.countplot(data=df, x="PaymentMethod", hue="Churn", ax=axes[1, 1])
+axes[1, 1].set_title("Churn by PaymentMethod")
+axes[1, 1].tick_params(axis="x", rotation=20)
+
+plt.tight_layout()
+plt.show()
+
+#Thống kê số tiền phải trả hằng tháng 
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+sns.boxplot(data=df, x="Churn", y="MonthlyCharges", ax=axes[0])
+axes[0].set_title("MonthlyCharges by Churn")
+
+#Thống kê ngừng dịch vụ
+sns.boxplot(data=df, x="Churn", y="tenure", ax=axes[1])
+axes[1].set_title("Tenure by Churn")
+#In kết quả 
+plt.tight_layout()
+plt.show()
+```
+<p align = "center">
+    <img src = "Screenshot 2026-03-22 214135.png" alt = "Phân bổ Churn"width = "700"/>
+    <img src = "Screenshot 2026-03-22 214238.png" alt = "Ngừng sử dụng dịch vụ Internet và phương thức thanh toán"width = "700"/>
+    <img src = "Screenshot 2026-03-22 214010.png" alt = "Số tiền phải trả và thời gian gắn bó"width = "700"/>
+</p>
 
 ## 2.2. Xây dựng biểu đồ
 ```python
@@ -52,34 +141,79 @@ plt.show()
     <img src = "Screenshot 2026-03-22 210619.png" alt = "In ra kết quả"width = "700"/>
 </p>
 
+## 2.3. Nhận xét
+Nhóm khách hàng có nguy cơ rời bỏ cao
+- Hợp đồng Month-to-month
+- Thanh toán bằng Electronic check
+- Chi phí hàng tháng cao (MonthlyCharges lớn)
+- Tenure thấp (khách hàng mới)
+- Dùng dịch vụ Fiber optic Internet
+
 # 3. Tiền xử lý dữ liệu
 
-1. Thư viện
+## 3.1. Chia dữ liệu và dựng pipeline tiền xử lý
 ```python
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import LabelEncoder
+X = dataset.drop(columns=["Churn"])
+y = dataset["Churn"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
+)
+
+numeric_cols = X.select_dtypes(include=["number"]).columns.tolist()
+categorical_cols = X.select_dtypes(include=["object"]).columns.tolist()
+
+numeric_transformer = Pipeline(steps=[
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scaler", StandardScaler()),
+])
+
+categorical_transformer = Pipeline(steps=[
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", make_one_hot_encoder()),
+])
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("num", numeric_transformer, numeric_cols),
+        ("cat", categorical_transformer, categorical_cols),
+    ],
+    remainder="drop",
+)
+
+pca_preprocessor = ColumnTransformer(
+    transformers=[
+        ("num", SimpleImputer(strategy="median"), numeric_cols),
+        ("cat", make_one_hot_encoder(), categorical_cols),
+    ],
+    remainder="drop",
+)
+
+preprocessor
+```
+<p align = "center">
+    <img src = "Screenshot 2026-03-22 220043.png" alt = "Pipeline"width = "700"/>
+</p>
+
+## 3.2. Code tiền xử lý dữ liệu
+
+1. Đọc file CSV
+```python
+doc_file = pd.read_csv(DATA_PATH)
 ```
 
-2. Đọc file CSV
-```python
-doc_file = pd.read_csv('WA_Fn-UseC_-Telco-Customer-Churn.csv')
-```
-
-3. Khái quát chung của data set trước khi xử lý
+2. Khái quát chung của data set trước khi xử lý
 ```python
 doc_file.describe()
 ```
 
-4. Kiểm tra lỗi
+3. Kiểm tra lỗi
 ```python
 #Kiểm tra cột bị thiếu, sum = 0 -> Đầy đủ
 print(doc_file.isnull().sum())
 ```
 
-5. Chuyển dữ liệu về đúng định dạng
+4. Chuyển dữ liệu về đúng định dạng
 ```python
 col_nums = ['MonthlyCharges', 'tenure', 'TotalCharges']
 #General --> Number
@@ -87,7 +221,7 @@ for col in col_nums:
     doc_file[col] = pd.to_numeric(doc_file[col], errors='coerce')
 ```
 
-6. Xét số lượng kiểu kết quả điền mỗi cột
+5. Xét số lượng kiểu kết quả điền mỗi cột
 Trạng thái *unique*
 ```python
 col_all_YN = ['gender', 'Partner', 'Dependents','MultipleLines', 'PhoneService', 
@@ -100,7 +234,7 @@ for x in col_all_YN:
 ```
 Kết luận: File đã clean
 
-7. Encoding 
+6. Encoding 
 Trong mã hóa dữ liệu, các dạng dữ liệu dưới dạng chữ ('text' - string) cần chuyển sang mã hóa số để mô hình Machine Learning có thể hiểu. 
 
 Ví dụ: 'NO', 'no', 'No' encode sang 0 \
@@ -150,33 +284,114 @@ print(dataset.head())
 
 
 # 4. Xây dựng và đánh giá mô hình
-## 4.1. Các mô hình được sử dụng
-Liệt kê
+## 4.1. Xây dựng mô hình hiệu quả nhất
 
-## 4.2. Huấn luyện mô hình
-- Train từng mô hình trên tập dữ liệu đã xử lý
-- Dự đoán trên tập test
+```python
+models = {
+    "ClassificationTree": DecisionTreeClassifier(**TREE_CONFIG),
+    "RandomForest": RandomForestClassifier(**RF_CONFIG),
+    "SVM": SVC(**SVM_CONFIG),
+    "LogisticRegression": LogisticRegression(**LOGREG_CONFIG),
+}
 
-Đánh giá mô hình 
-- Accuracy
-- Precision
-- Recall
-- F1-score
+model_display_names = {
+    "ClassificationTree": "Decision Tree",
+    "RandomForest": "Random Forest",
+    "SVM": "Linear SVM",
+    "LogisticRegression": "Logistic Regression",
+}
 
-Feature Importance
-- Xác định các biến quan trọng nhất
-- Vẽ biểu đồ top đặc trưng quan trọng
---> Biểu đồ 
+results = []
+fitted_models = {}
 
-## 4.3. So sánh kết quả 
-|Tên mô hình|Ưu điểm|Lý do|
-|---|---|---|
-|Mô hình tuyến tính|Dễ giải thích||
-|Mô hình ensemble|||
-|Mô hình boosting|||
+for name, model in models.items():
+    clf = Pipeline(steps=[("preprocess", preprocessor), ("model", model)])
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    y_proba = clf.predict_proba(X_test)[:, 1]
+
+    results.append({
+        "model_code": name,
+        "Model": model_display_names[name],
+        "Accuracy": accuracy_score(y_test, y_pred),
+        "Precision": precision_score(y_test, y_pred),
+        "Recall": recall_score(y_test, y_pred),
+        "F1": f1_score(y_test, y_pred),
+        "ROC AUC": roc_auc_score(y_test, y_proba),
+    })
+
+    fitted_models[name] = clf
+
+results_df = pd.DataFrame(results).sort_values(by="ROC AUC", ascending=False)
+results_display_df = results_df.drop(columns=["model_code"])
+results_display_df
+
+```
+So sánh kết quả 
+<p align = "center">
+    <img src = "Screenshot 2026-03-22 220610.png" alt = "So sánh độ chính xác các mô hình ML"width = "700"/>
+</p>
+
+Lưu kết quả và mô hình tốt nhất
+```python
+results_display_df.to_csv(MODEL_RESULTS_FILENAME, index=False)
+
+best_model_code = results_df.iloc[0]["model_code"]
+best_model_name = results_df.iloc[0]["Model"]
+best_clf = fitted_models[best_model_code]
+joblib.dump(best_clf, BEST_MODEL_FILENAME)
+
+print("Saved model comparison to:", MODEL_RESULTS_FILENAME)
+print("Saved best model:", best_model_name, "->", BEST_MODEL_FILENAME)
+```
+Kết quả: 
+- Saved model comparison to: model_results.csv 
+- Saved best model: **Logistic Regression** -> best_churn_model.joblib
+
+## 4.2. Các biến đặc trưng
+```python
+def get_feature_names(preprocessor):
+    output_features = []
+    for name, transformer, cols in preprocessor.transformers_:
+        if name == "num":
+            output_features += cols
+        elif name == "cat":
+            ohe = transformer.named_steps["onehot"]
+            output_features += list(ohe.get_feature_names_out(cols))
+    return output_features
+
+feature_names = get_feature_names(preprocessor)
+
+X_full = pca_preprocessor.fit_transform(X)
+X_scaled = StandardScaler().fit_transform(X_full)
+pca = PCA(n_components=PCA_COMPONENTS, random_state=RANDOM_STATE)
+pca.fit(X_scaled)
+feature_scores = np.abs(pca.components_).T @ pca.explained_variance_ratio_
+
+pca_importance = pd.DataFrame({"feature": feature_names, "score": feature_scores}).sort_values(
+    by="score", ascending=False
+)
+
+rf_model = fitted_models["RandomForest"].named_steps["model"]
+rf_importance = pd.DataFrame({
+    "feature": feature_names,
+    "importance": rf_model.feature_importances_,
+}).sort_values(by="importance", ascending=False)
+
+pca_importance.to_csv(PCA_IMPORTANCE_FILENAME, index=False)
+rf_importance.to_csv(RF_IMPORTANCE_FILENAME, index=False)
+
+print("Saved:", PCA_IMPORTANCE_FILENAME, RF_IMPORTANCE_FILENAME)
+pca_importance.head(10)
+```
+Kết quả phân bố: \
+![Xác suất quan trọng](<Screenshot 2026-03-22 221331.png>)
+
+
 
 # 5. Bài toán thực tế
-## 5.1. Dự đoán một khách hàng
+## 5.1. Dự đoán cho dataset *Telco Customer Churn*
+
 - Dự đoán `Churn` hay `No Churn`
 
 1. Thư viện
@@ -296,6 +511,43 @@ print(submission.head())
     <img src = "Screenshot 2026-03-22 205527.png" alt = "Xác suất đạt Churn hoặc No Churn" width = "300"/>
 </p>
 
+## 5.2. Dự đoán một khách hàng
+
+Nhập vào input data bất kì 
+```python
+SAMPLE_INPUT = {
+    "gender": "Female",
+    "SeniorCitizen": 0,
+    "Partner": "Yes",
+    "Dependents": "No",
+    "tenure": 5,
+    "PhoneService": "Yes",
+    "MultipleLines": "No",
+    "InternetService": "Fiber optic",
+    "OnlineSecurity": "No",
+    "OnlineBackup": "Yes",
+    "DeviceProtection": "No",
+    "TechSupport": "No",
+    "StreamingTV": "Yes",
+    "StreamingMovies": "Yes",
+    "Contract": "Month-to-month",
+    "PaperlessBilling": "Yes",
+    "PaymentMethod": "Electronic check",
+    "MonthlyCharges": 85.0,
+    "TotalCharges": 425.0,
+}
+
+sample = pd.DataFrame([SAMPLE_INPUT])
+proba = best_clf.predict_proba(sample)[0, 1]
+pred = best_clf.predict(sample)[0]
+
+print("Churn probability:", round(proba, 4))
+print("Prediction:", "Churn" if pred == 1 else "No Churn")
+```
+Kết quả:
+- Churn probability: 0.8576
+- Prediction: Churn
+
 ## 5.2. Ý nghĩa:
 1. Ứng dụng thực tế trong doanh nghiệp
     - Xác định nhóm khách hàng có nguy cơ cao
@@ -305,7 +557,6 @@ print(submission.head())
 2. Ý nghĩa kinh doanh:
     - Mô hình không chỉ để dự đoán
     - Mà còn giúp doanh nghiệp ra quyết định giữ chân khách hàng
-
 
 # 6. Kết luận
 
