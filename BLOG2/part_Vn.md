@@ -556,8 +556,7 @@ Kết quả:
     - Cải thiện dịch vụ hỗ trợ kỹ thuật
     - Hỗ trợ bộ phận CSKH ưu tiên chăm sóc
 2. Ý nghĩa kinh doanh:
-    - Mô hình không chỉ để dự đoán
-    - Mà còn giúp doanh nghiệp ra quyết định giữ chân khách hàng
+    - Mô hình không chỉ để dự đoán mà còn giúp doanh nghiệp ra quyết định giữ chân khách hàng
 
 # 6. Kết luận
 
