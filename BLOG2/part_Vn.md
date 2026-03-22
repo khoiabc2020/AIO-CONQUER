@@ -142,8 +142,8 @@ print(dataset.head())
 ```
 
 <p align = "center">
-    <img src = "Screenshot 2026-03-22 201517.png" alt = "After encode"width = "500"/>
-    <img src = "Screenshot 2026-03-22 201524.png" alt = "After encode" width = "500"/>
+    <img src = "Screenshot 2026-03-22 201517.png" alt = "After encode"width = "700"/>
+    <img src = "Screenshot 2026-03-22 201524.png" alt = "After encode" width = "700"/>
 </p>
 
 
