@@ -1,3 +1,4 @@
+![alt text](<Screenshot 2026-03-22 224527.png>)
 # 1. Bài toán *Churn* trong doanh nghiệp
 ## 1.1. Khái niệm *Churn*
 Hãy hình dung doanh nghiệp của bạn giống như một chiếc xô đang đựng nước. Bạn đổ thêm nước vào (khách hàng mới), nhưng dưới đáy xô lại có những lỗ thủng khiến nước rò rỉ ra ngoài.
@@ -561,3 +562,7 @@ Kết quả:
 # 6. Kết luận
 
 # 7. Nguồn tham khảo 
+
+1. Website Kaggle: [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data)
+
+2. Website Canva Education - Key word *Data*: (https://www.canva.com/)
