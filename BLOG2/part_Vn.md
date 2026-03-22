@@ -559,6 +559,16 @@ Kết quả:
     - Mô hình không chỉ để dự đoán mà còn giúp doanh nghiệp ra quyết định giữ chân khách hàng
 
 # 6. Kết luận
+Bài toán dự đoán *Churn* nhằm xác định khách hàng có khả năng rời bỏ dịch vụ, từ đó hỗ trợ doanh nghiệp đưa ra các chiến lược "giữ chân" khách hàng.
+
+Quy trình được đề xuất:
+1. Tiền xử lý dữ liệu
+2. Xây dựng và huấn luyện mô hình
+3. Đánh giá bằng các chỉ số
+
+Yếu tổ ảnh hưởng mạnh đến *Churn* là thời gian sử dụng dịch vụ (*tenure*), loại hợp đồng (*contract type*) dịch vụ internet, và phí hàng tháng (*monthly charges*).
+
+Dataset mẫu *Telco Customer Churn* trên Kaggle chưa phản ảnh đầy đủ thực tế doanh nghiệp, ngoài các yếu tố cấu thành, doanh nghiệp còn bị ảnh hưởng bởi nhiều yếu tố cạnh tranh khác như xu hướng, biến động nền kinh tế chung,...
 
 # 7. Nguồn tham khảo 
 
