@@ -131,13 +131,19 @@ Link csv: [Download dữ liệu CSV](OnlineRetail.csv)
 - Import file csv:
 Data -> Get Data -> From File -> From Workbook. 
 <p align = "center">
+Tìm mục Excel Workbook
+<br>
 <img src = "image-3.png" width = "300">
+<p align = "center">
+Chuyển bảng excel đến Power Query
+<br>
 <img src = "image-4.png" width = "300">
 </p>
 
 Ngay khi nạp, kích hoạt *Column Quality* và *Column Distribution* trong tab View
 <p align = "center">
-<img src = "image-5.png" width = "500">
+Mở tab View 
+<img src = "image-5.png" alt = "" width = "500">
 </p>
 
 Kích hoạt các công cụ định lượng ngay tại nguồn:
@@ -147,6 +153,8 @@ Kích hoạt các công cụ định lượng ngay tại nguồn:
 
 Biểu đồ Column Profile hiển thị giá trị Min/Max của Quantity 
 <p align = "center">
+2 dòng cuối của Column statistics
+<br>
 <img src = "image-6.png" width = "500">
 </p>
 
@@ -161,6 +169,8 @@ Phân tích cho thấy có 135,080 dòng thiếu định danh khách hàng.
     - Mục tiêu RFM: Để tính toán *Recency* (Ngày mua gần nhất) và Frequency (Tần suất), ta bắt buộc phải có thông tin định danh chính xác từ hệ thống CRM.
 Kết quả:
 <p align = "center">
+Loại bỏ ô trống trong CustomerID
+<br>
 <img src = "image-8.png" width = "300">
 </p>
 
@@ -174,6 +184,8 @@ Dữ liệu thô chứa các giao dịch hủy (mã hóa bằng tiền tố '*C*
 - Ý nghĩa nghiệp vụ: Loại bỏ đơn hàng bị hủy, quà tặng tặng kèm (giá 0) và nợ xấu. Điều này giúp tính toán Doanh thu thực tế (Net Revenue) thay vì doanh thu ảo.
 
 <p align = "center">
+Bấm icon hình chiếc phễu
+<br>
 <img src = "image-9.png" width = "300">
 </p>
 
@@ -188,6 +200,8 @@ Dữ liệu thô chứa các giao dịch hủy (mã hóa bằng tiền tố '*C*
 - *CustomerID*: Chuyển sang Whole Number (Dùng làm định danh thay vì văn bản).
 
 <p align = "center">
+Ép kiểu dữ liệu góc trái, trên cùng
+<br>
 <img src = "image-10.png" width = "500">
 </p>
 
@@ -204,6 +218,8 @@ Cột Description chứa nhiều lỗi nhập liệu thủ công:
     --> Kết quả: Đảm bảo khi chạy Pivot Table, các sản phẩm không bị tách rời vô lý.
 
 <p align = "center">
+Tìm nút Format
+<br>
 <img src = "image-11.png" width = "500">
 </p>
 
@@ -216,10 +232,13 @@ Xây dựng cột logic để phân loại quy mô giao dịch:
 - Mục đích: Hỗ trợ Designer tạo *Slicer* trên Dashboard để so sánh hành vi giữa nhóm khách mua sỉ và mua lẻ.
 
 <p align = "center">
-<img src = "image-12.png" width = "500">
-</p>
-<p align = "center">
-<img src = "image-13.png" width = "300">
+    Nhập đối tượng cần so sánh và đích đến 
+    <br>
+    <img src = "image-12.png" width = "500">
+    <p align = "center"> 
+    In kết quả 
+    <br>
+    <img src = "image-13.png" width = "300">
 </p>
 
 <u> **Bước 7: Chi lại lịch sử thao tác** </u>
@@ -228,6 +247,8 @@ Mọi bước trên được ghi lại trong bảng Applied Steps.
 - Ý nghĩa: Đây là "kịch bản" tự động hóa. Khi có tệp dữ liệu tháng tiếp theo, chúng ta chỉ cần nhấn *Refresh*, Power Query sẽ tự động lặp lại 8 bước này, loại bỏ 100% sai sót thủ công và đảm bảo tính nhất quán (*Reproducibility*).
 
 <p align = "center">
+Tìm cột Applied steps 
+<br>
 <img src = "image-14.png" width = "300">
 </p>
 
@@ -252,6 +273,8 @@ in
     #"AddedStatus"
 ```
 <p align = "center">
+Về tab Home và tìm Advanced Editor 
+<br>
 <img src = "image-15.png" width = "400">
 </p>
 
@@ -367,7 +390,7 @@ def build_report(data_frame: pd.DataFrame) -> pd.DataFrame:
 
     return pd.DataFrame(summary_values.items(), columns=["metric", "value"])
 ```
-Kết quả trả về:
+Kết quả trả về 2 trạng thái trước và sau "clean":
 
 <p align = "center">
     <img src = "image.png" alt = "Before and After" width = "300"/>
@@ -526,3 +549,4 @@ removed_table.to_csv(
 
 list(output_folder.iterdir())
 ```
+# 8. Kết luận 
