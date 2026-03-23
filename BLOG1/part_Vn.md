@@ -1,3 +1,4 @@
+![Thumbnail](<Screenshot 2026-03-23 145840.png>)
 # 1. Bối cảnh dữ liệu bán lẻ và khái niệm GIGO
 
 ## 1.1. Bối cảnh
