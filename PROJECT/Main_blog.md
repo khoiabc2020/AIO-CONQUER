@@ -84,6 +84,7 @@ axes[0].set_ylabel("Rows")
 for idx, row in count_df.iterrows():
     axes[0].text(idx, row["count"], f'{row["count"]:,}', ha="center", va="bottom", fontsize=10)
 ```
+![alt text](image1.png)
 
 ### 4.2 Độ dài văn bản
 - Tin giả và tin thật có độ dài khác nhau không?
@@ -107,7 +108,7 @@ axes[1].set_xlabel("Words")
 plt.tight_layout()
 plt.show()
 ```
-#ẢNH 
+![alt text](image2.png)
 
 ### 4.3 Từ vựng phổ biến
 - Các từ thường xuất hiện trong fake news
