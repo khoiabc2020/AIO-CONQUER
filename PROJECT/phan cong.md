@@ -88,11 +88,9 @@ Dữ liệu văn bản thường chứa nhiều nhiễu, do đó cần làm sạ
 Máy học không hiểu text → cần chuyển sang dạng số.
 
 ### 6.1 TF-IDF
+TF-IDF (Term Frequency – Inverse Document Frequency) là phương pháp biểu diễn văn bản phổ biến, cho phép đánh giá mức độ quan trọng của một từ trong một tài liệu so với toàn bộ tập dữ liệu.
 
-TF-IDF giúp biểu diễn mức độ quan trọng của từ trong văn bản.
-
-Theo nghiên cứu, TF-IDF là một trong những phương pháp phổ biến để vector hóa dữ liệu văn bản trước khi đưa vào mô hình học máy :contentReference[oaicite:1]{index=1}.
-
+Cụ thể, TF-IDF tăng trọng số cho những từ xuất hiện nhiều trong một văn bản nhưng hiếm trong các văn bản khác, từ đó giúp mô hình học máy tập trung vào các đặc trưng có giá trị phân biệt cao. Phương pháp này được sử dụng rộng rãi trong các hệ thống phân loại văn bản và phát hiện tin giả
 ---
 
 ### 6.2 Tokenization (Deep Learning)
