@@ -107,7 +107,7 @@ axes[1].set_xlabel("Words")
 plt.tight_layout()
 plt.show()
 ```
-![alt text](image.png)
+#ẢNH 
 
 ### 4.3 Từ vựng phổ biến
 - Các từ thường xuất hiện trong fake news
