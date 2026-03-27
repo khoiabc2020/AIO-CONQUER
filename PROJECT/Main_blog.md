@@ -37,58 +37,7 @@ Trong project này, sử dụng dataset WELFake gồm:
 
 Dữ liệu lấy trong bộ csv: "WELFake_Dataset.csv"
 
-## 3.1. Thư viện
-```python
-import inspect
-import json
-import random
-import re
-from collections import Counter
-from dataclasses import asdict, dataclass
-from pathlib import Path
-from urllib.request import urlretrieve
-
-import joblib
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import torch
-import nltk
-from datasets import Dataset, DatasetDict
-from IPython.display import display
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-)
-from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
-from transformers import (
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    DataCollatorWithPadding,
-    Trainer,
-    TrainingArguments,
-)
-# - sklearn de train baseline
-# - transformers/datasets de train DistilBERT
-```
-
-
-## 3.2. Load Data
-```python
-
-```
-
-## 3.3. Cleaning text
+## 3.1. Cleaning text
 ```python
 def clean(text: str) -> str:
     # Chuẩn hóa text cho baseline TF-IDF.
@@ -100,7 +49,7 @@ def clean(text: str) -> str:
     return " ".join(words)
 ```
 
-## 3.4. Đánh giá mô hình trong một dictionary
+## 3.2. Đánh giá mô hình trong một dictionary
 
 ```python
 def metric_row(family: str, model: str, split: str, y_true, y_pred, params=None) -> dict[str, object]:
