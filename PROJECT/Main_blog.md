@@ -35,7 +35,17 @@ Trong project này, sử dụng dataset WELFake gồm:
 - text
 - label
 
-Dữ liệu lấy trong bộ csv: "WELFake_Dataset.csv"
+Dữ liệu lấy trong bộ csv: "WELFake_Dataset.csv".
+
+Nhận xét: Dữ liệu đã được gán nhãn sẵn, phù hợp cho bài toán supervised learning.
+
+### Các vấn đề cần quan tâm:
+- Dữ liệu có cân bằng không?
+- Có missing values không?
+- Có dữ liệu trùng lặp không?
+
+
+### Các bước preprocessing bao gồm làm sạch chữ, 
 
 ## 3.1. Cleaning text
 ```python
@@ -51,27 +61,46 @@ def clean(text: str) -> str:
 
 ## 3.2. Đánh giá mô hình trong một dictionary
 
+Hàm *metric_row* gom các chỉ số đánh giá của một mô hình phân loại thành một dòng dữ liệu dạng *dictionary* để dễ so sánh giữa các mô hình khác nhau.
+
 ```python
 def metric_row(family: str, model: str, split: str, y_true, y_pred, params=None) -> dict[str, object]:
-    #Gom metric thành 1 dòng để so sánh giữa các "model"
     return {
         "family": family,
         "model": model,
         "split": split,
-        "accuracy": accuracy_score(y_true, y_pred),
-        "precision": precision_score(y_true, y_pred, zero_division=0),
-        "recall": recall_score(y_true, y_pred, zero_division=0),
+        "accuracy": accuracy_score(y_true, y_pred), #Độ chính xác
+        "precision": precision_score(y_true, y_pred, zero_division=0), 
+        "recall": recall_score(y_true, y_pred, zero_division=0), #Độ bao phủ 
         "f1": f1_score(y_true, y_pred, zero_division=0),
         "params": "" if params is None else json.dumps(params, sort_keys=True),
     }
 ```
+Thay vì phải tính từng metric rồi lưu riêng lẻ, *metric_row* lưu vào một dòng dữ liệu thống nhất đưa vào bảng hoặc DataFrame để so sánh nhiều mô hình.
 
-Dữ liệu đã được gán nhãn sẵn, phù hợp cho bài toán supervised learning.
-
-### Các vấn đề cần quan tâm:
-- Dữ liệu có cân bằng không?
-- Có missing values không?
-- Có dữ liệu trùng lặp không?
+## 3.3. Đánh giá mô hình phân loại 
+```python
+def show_report(y_true, y_pred, title: str, names: dict[int, str]) -> None:
+    # Hiện classification report và confusion matrix.
+    display(pd.DataFrame(classification_report(y_true, y_pred, output_dict=True, zero_division=0)).T)
+    #Ma trận nhầm lẫn 
+    cm = confusion_matrix(y_true, y_pred)
+    #Vẽ heatmap 
+    ax = sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        cbar=False,
+        xticklabels=[names[0], names[1]],
+        yticklabels=[names[0], names[1]],
+    )
+    ax.set_title(title)
+    ax.set_xlabel("Pred")
+    ax.set_ylabel("True")
+    plt.tight_layout()
+    plt.show()
+```
 
 
 ## 4. Phân tích dữ liệu (EDA)
@@ -84,7 +113,7 @@ Vai trò của EDA:
 
 Qua đó, ta có cái nhìn trực quan về dữ liệu, từ đó định hướng các bước tiền xử lý và lựa chọn mô hình phù hợp.
 
-### 4.1 Phân bố nhãn
+### 4.1. Phân bố nhãn
 - Tỷ lệ "*fake*" và "*real*"
 ```python
 # Plot class balance and content length by class.
@@ -138,7 +167,32 @@ plt.show()
 ```
 ![alt text](image2.png)
 
-### 4.3 Từ vựng phổ biến
+
+### 4.3. Phân cấp độ dài tiêu đề và chữ 
+
+```python
+# Compare title length and text length by class.
+fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+
+sns.boxplot(data=df, x="label", y="title_len", hue="label", dodge=False, palette=palette, ax=axes[0], legend=False)
+axes[0].set_title("Title length by class")
+axes[0].set_xticklabels([names[0], names[1]])
+axes[0].set_xlabel("")
+axes[0].set_ylabel("Words")
+
+sns.boxplot(data=df, x="label", y="text_len", hue="label", dodge=False, palette=palette, ax=axes[1], legend=False)
+axes[1].set_title("Text length by class")
+axes[1].set_xticklabels([names[0], names[1]])
+axes[1].set_xlabel("")
+axes[1].set_ylabel("Words")
+
+plt.tight_layout()
+plt.show()
+```
+
+![alt text](image3.png)
+
+### 4.4. Từ vựng phổ biến
 - Các từ thường xuất hiện trong fake news
 
 ```python
