@@ -192,3 +192,7 @@ Bài toán phát hiện tin giả có thể được giải quyết hiệu quả
 Project này không chỉ dừng ở việc xây dựng mô hình, mà còn thể hiện một pipeline hoàn chỉnh từ xử lý dữ liệu, xây dựng model đến đánh giá và phân tích.
 
 Trong tương lai, việc kết hợp các mô hình nâng cao và dữ liệu đa nguồn sẽ giúp cải thiện độ chính xác và tính ứng dụng thực tế.
+
+##15. Dữ liệu 
+
+[fake news](https://www.kaggle.com/datasets/saurabhshahane/fake-news-classification/)
