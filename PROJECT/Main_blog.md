@@ -7,7 +7,7 @@ Trong thời đại mạng xã hội phát triển, thông tin được lan truy
 
 Tin giả có thể gây ảnh hưởng lớn đến xã hội, từ việc làm sai lệch nhận thức đến tác động đến chính trị và sức khỏe cộng đồng. Do đó, việc xây dựng hệ thống tự động phát hiện tin giả là một bài toán quan trọng trong lĩnh vực Data Science và NLP.
 
-Theo các nghiên cứu gần đây, việc sử dụng các mô hình học máy có thể giúp phân loại tin giả với độ chính xác cao, thay thế phương pháp kiểm duyệt thủ công vốn không còn khả thi với khối lượng dữ liệu lớn :contentReference[oaicite:0]{index=0}.
+Theo các nghiên cứu gần đây, việc sử dụng các mô hình học máy có thể giúp phân loại tin giả với độ chính xác cao, thay thế phương pháp kiểm duyệt thủ công vốn không còn khả thi với khối lượng dữ liệu lớn.
 
 
 ## 2. Bài toán
@@ -26,6 +26,7 @@ Output:
 Đây là bài toán **classification (phân loại nhị phân)** trong Machine Learning.
 
 
+
 ## 3. Dataset
 
 Trong project này, sử dụng dataset WELFake gồm:
@@ -33,6 +34,88 @@ Trong project này, sử dụng dataset WELFake gồm:
 - title
 - text
 - label
+
+Dữ liệu lấy trong bộ csv: "WELFake_Dataset.csv"
+
+## 3.1. Thư viện
+```python
+import inspect
+import json
+import random
+import re
+from collections import Counter
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from urllib.request import urlretrieve
+
+import joblib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import torch
+import nltk
+from datasets import Dataset, DatasetDict
+from IPython.display import display
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.svm import LinearSVC
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    Trainer,
+    TrainingArguments,
+)
+# - sklearn de train baseline
+# - transformers/datasets de train DistilBERT
+```
+
+
+## 3.2. Load Data
+```python
+
+```
+
+## 3.3. Cleaning text
+```python
+def clean(text: str) -> str:
+    # Chuẩn hóa text cho baseline TF-IDF.
+    text = str(text).lower()
+    text = re.sub(r"[^a-z\\s]", " ", text)
+    words = re.sub(r"\\s+", " ", text).strip().split()
+    words = [word for word in words if word not in stop_words]
+    words = [lemmatizer.lemmatize(word) for word in words]
+    return " ".join(words)
+```
+
+## 3.4. Đánh giá mô hình trong một dictionary
+
+```python
+def metric_row(family: str, model: str, split: str, y_true, y_pred, params=None) -> dict[str, object]:
+    #Gom metric thành 1 dòng để so sánh giữa các "model"
+    return {
+        "family": family,
+        "model": model,
+        "split": split,
+        "accuracy": accuracy_score(y_true, y_pred),
+        "precision": precision_score(y_true, y_pred, zero_division=0),
+        "recall": recall_score(y_true, y_pred, zero_division=0),
+        "f1": f1_score(y_true, y_pred, zero_division=0),
+        "params": "" if params is None else json.dumps(params, sort_keys=True),
+    }
+```
 
 Dữ liệu đã được gán nhãn sẵn, phù hợp cho bài toán supervised learning.
 
@@ -53,7 +136,7 @@ Vai trò của EDA:
 Qua đó, ta có cái nhìn trực quan về dữ liệu, từ đó định hướng các bước tiền xử lý và lựa chọn mô hình phù hợp.
 
 ### 4.1 Phân bố nhãn
-- Tỷ lệ fake vs real
+- Tỷ lệ "*fake*" và "*real*"
 ```python
 # Plot class balance and content length by class.
 fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
