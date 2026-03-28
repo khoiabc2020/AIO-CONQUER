@@ -258,16 +258,17 @@ X_raw_train, X_raw_val = train_test_split(
 )
 ```
 
-Tỉ lệ cuối cùng:
-- train ~ 70%
-- val ~ 10%
-- test ~ 20%
 
 ||split|rows|
 |---|---|---|
 |0|train|44542
 |1|val|6364|
 |2|test|12727|
+
+Tỉ lệ cuối cùng:
+- train ~ 70%
+- val ~ 10%
+- test ~ 20%
 
 ### 7.2. Train các baseline 
 Sau khi huấn luyện sẽ so sánh trên tập validation.
