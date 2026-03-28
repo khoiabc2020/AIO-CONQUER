@@ -164,7 +164,7 @@ Top word = "*trump*"
 Nhận xét: Việc phân tích này giúp hiểu rõ đặc trưng của dữ liệu trước khi modeling.
 
 ## 5. Biểu diễn dữ liệu (Feature Engineering)
-Máy học không hiểu text → cần chuyển sang dạng số.
+Máy học không hiểu text -> cần chuyển sang dạng số.
 
 ### 5.1. Giới thiệu TF-IDF
 
@@ -173,13 +173,18 @@ Cụ thể, TF-IDF tăng trọng số cho những từ xuất hiện nhiều tro
 
 
 ### 5.2. Tokenization (Deep Learning)
+Trong các mô hình học sâu xử lý ngôn ngữ tự nhiên (NLP), văn bản cần được chuyển đổi thành dạng số để mô hình có thể hiểu và học được. 
 
-- Chuyển text → sequence
-- Padding để cùng độ dài
+Hai bước cơ bản bao gồm:
+- Chuyển text -> sequence \
+    Biến mỗi từ (token) trong văn bản thành một số nguyên mà vẫn giữ nguyên thứ tự.
+    Thực hiện dùng `Tokenizer` trong Keras/TensorFlow.
+- Padding để cùng độ dài \
+    Các câu có độ dài khác nhau, cần chuẩn hóa về cùng một độ dài để đưa vào mô hình.
+    Thực hiện dùng `pad_sequences`.
 
 
 ## 6. Mô hình
-
 ### 6.1. Baseline (TF-IDF + Linear Model)
 
 - Nhanh
@@ -195,17 +200,18 @@ Cụ thể, TF-IDF tăng trọng số cho những từ xuất hiện nhiều tro
 Các nghiên cứu cho thấy các mô hình học sâu và SVM có thể đạt độ chính xác cao hơn so với các phương pháp truyền thống.
 
 ## 7. Huấn luyện mô hình
-
 ### Quy trình:
 
-- Chia dữ liệu: train / test  
-- Huấn luyện model  
-- Tuning hyperparameters  
-- Sử dụng callbacks để tránh overfitting  
+1. Chia dữ liệu 
+2. Huấn luyện model  
+3. Tuning hyperparameters  
+4. Sử dụng callbacks để tránh overfitting  
 
+## 7.1. Chia tập train/validation/test
+
+## 7.2. Train các baseline 
 
 ## 8. Đánh giá mô hình
-
 Không chỉ dùng accuracy, cần sử dụng:
 
 - Precision  
@@ -213,11 +219,10 @@ Không chỉ dùng accuracy, cần sử dụng:
 - F1-score  
 - Confusion Matrix  
 
--->> F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
+--> F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
 
 
 ## 9. Kết quả và phân tích
-
 - Model đạt độ chính xác: ...  
 - So sánh giữa các model  
 
@@ -226,7 +231,6 @@ Không chỉ dùng accuracy, cần sử dụng:
 - Vì sao?
 
 ## 10. Phân tích lỗi (Error Analysis)
-
 - Các trường hợp model dự đoán sai  
 - Nguyên nhân:
   - ngôn ngữ mơ hồ
