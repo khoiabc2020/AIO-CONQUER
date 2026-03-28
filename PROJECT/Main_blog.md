@@ -1,44 +1,61 @@
 ![alt text](image.png)
 # PHÁT HIỆN TIN GIẢ BẰNG MACHINE LEARNING
 
-## 1. Giới thiệu
+Có những bài viết chỉ cần đọc tiêu đề là đã thấy “có mùi”, nhưng cũng có những bài được viết đủ khéo để đánh lừa cả người đọc cẩn thận. Đó là lúc bài toán phát hiện tin giả trở nên thú vị: ranh giới giữa đúng và sai không còn nằm ở vài từ khóa lộ liễu, mà nằm ở cách dữ liệu được biểu diễn, cách mô hình học ngữ cảnh và cách ta đánh giá nó một cách nghiêm túc.
 
-Trong thời đại mạng xã hội phát triển, thông tin được lan truyền với tốc độ rất nhanh. Tuy nhiên, điều này cũng kéo theo một vấn đề nghiêm trọng: tin giả (fake news).
+Project này bắt đầu từ đúng câu hỏi đó: nếu đứng giữa một bài viết trông rất thuyết phục, mô hình nào sẽ nhìn ra sự khác biệt trước, một *baseline tuyến tính* mạnh hay một *transformer* hiểu ngữ cảnh tốt hơn?
 
-Tin giả có thể gây ảnh hưởng lớn đến xã hội, từ việc làm sai lệch nhận thức đến tác động đến chính trị và sức khỏe cộng đồng. Do đó, việc xây dựng hệ thống tự động phát hiện tin giả là một bài toán quan trọng trong lĩnh vực Data Science và NLP.
+## 1. Lời nói đầu 
 
-Theo các nghiên cứu gần đây, việc sử dụng các mô hình học máy có thể giúp phân loại tin giả với độ chính xác cao, thay thế phương pháp kiểm duyệt thủ công vốn không còn khả thi với khối lượng dữ liệu lớn.
+Tin giả là một kiểu dữ liệu rất khó chịu. Nó không thô đến mức chỉ cần lọc vài từ khóa là xong, nhưng cũng không tinh vi đến mức mọi mô hình đều bất lực. Cái khó nằm ở chỗ nó thường được viết theo cách rất giống tin thật: tiêu đề bắt mắt, nội dung có vẻ hợp lý, giọng điệu đủ thuyết phục để người đọc tin rằng mình đang tiếp nhận một thông tin đáng tin cậy.
+
+Đó cũng là lý do bài toán phát hiện tin giả luôn thú vị trong NLP. Nó nằm đúng ở điểm giao giữa xử lý ngôn ngữ, mô hình hóa dữ liệu và tư duy triển khai thực tế. Một project tốt cho bài toán này không nên chỉ dừng ở việc “train một model cho có”, mà cần đi qua đủ các bước: hiểu dữ liệu, làm sạch văn bản, kiểm tra đặc điểm của tập dữ liệu, so sánh nhiều mô hình, đánh giá đúng cách, rồi lưu lại kết quả để có thể dùng tiếp trong ứng dụng.
+
+Project này được xây dựng theo đúng tinh thần đó trên bộ dữ liệu **WELFake**. Mục tiêu không chỉ là phân loại bài viết thành `real` và `fake`, mà là tạo ra một pipeline đủ gọn, đủ rõ, và đủ thực dụng để vừa dùng cho học thuật, vừa có thể nối sang một giao diện demo.
 
 
 ## 2. Bài toán
-Mục tiêu của bài toán là xây dựng một mô hình có thể phân loại một bài báo thành:
-- Tin thật (Real news)
-- Tin giả (Fake news)
-
 |Input|Nội dung bài báo (text, title)|
 |----|---|
 |**Output**|**Nhãn phân loại (0 hoặc 1)**|
 
 Đây là bài toán "*classification*" (phân loại nhị phân) trong Machine Learning.
 
-## 3. Dataset
-Trong project này, sử dụng dataset WELFake gồm:
-- title
-- text
-- label
+Project sử dụng file `WELFake_Dataset.csv` với ba cột chính:
 
-Dữ liệu lấy trong bộ csv: "WELFake_Dataset.csv" [2]
+- `title`
+- `text`
+- `label`
 
-Nhận xét: Dữ liệu đã được gán nhãn sẵn, phù hợp cho bài toán supervised learning.
+Về mặt xử lý, notebook không làm gì quá rườm rà ở bước đầu. Nó giữ lại đúng ba cột này, loại bỏ các dòng thiếu `label`, loại bỏ dữ liệu trùng lặp, rồi ghép `title` và `text` thành một trường văn bản đầy đủ hơn là `raw_content`.
 
+Một chi tiết nhỏ nhưng rất quan trọng nằm ở nhãn. Trong code hiện tại, nhãn được map lại như sau:
+
+```python
+df["label"] = df["label"].astype(int).map({0: 1, 1: 0})
+names = {0: "real", 1: "fake"}
+```
+
+Điều này có nghĩa là trong toàn bộ pipeline:
+
+- `0` là `real`
+- `1` là `fake`
+
+Đây là phần rất dễ bị bỏ qua khi viết báo cáo, nhưng nếu bỏ qua thì toàn bộ *precision*, *recall*, *confusion matrix* và *error analysis* đều có thể bị diễn giải ngược. Với những bài toán nhị phân như thế này, chỉ cần sai một quy ước nhãn là mọi phần nhận xét phía sau sẽ lệch toàn bộ.
+
+
+## 3. Tiền xử lý dữ liệu
 ### Các vấn đề cần quan tâm:
 - Dữ liệu có cân bằng không?
 - Có missing values không?
 - Có dữ liệu trùng lặp không?
 
+Notebook tách dữ liệu thành hai dạng văn bản khác nhau:
 
-### 3.1. Cleaning text
-Dữ liệu văn bản thường chứa nhiều nhiễu, do đó cần làm sạch.
+- `raw_content`: bản gần với dữ liệu gốc, dùng cho DistilBERT
+- `content`: bản đã làm sạch, dùng cho baseline TF-IDF
+
+Cách tách này rất hợp lý. Mô hình **transformer** thường hoạt động tốt hơn khi đầu vào vẫn giữ được ngữ cảnh tự nhiên, còn **TF-IDF** lại hưởng lợi rõ rệt khi văn bản đã được chuẩn hóa và giảm nhiễu.
 
 ### Các bước xử lý:
 - Chuyển về chữ thường  
@@ -51,7 +68,6 @@ Dữ liệu văn bản thường chứa nhiều nhiễu, do đó cần làm sạ
 - Stopwords removal  
 - Lemmatization  
 
-Nhận xét: Việc tiền xử lý giúp giảm nhiễu và cải thiện chất lượng feature.
 ```python
 def clean(text: str) -> str:
     # Chuẩn hóa text cho baseline TF-IDF.
@@ -62,29 +78,7 @@ def clean(text: str) -> str:
     words = [lemmatizer.lemmatize(word) for word in words]
     return " ".join(words)
 ```
-
-### 3.2. Đánh giá mô hình trong một dictionary
-
-Hàm *metric_row* gom các chỉ số đánh giá của một mô hình phân loại thành một dòng dữ liệu dạng *dictionary* để dễ so sánh giữa các mô hình khác nhau.
-
-```python
-# Hàm tính metric và vẽ confusion matrix.
-def metric_row(family: str, model: str, split: str, y_true, y_pred, params=None) -> dict[str, object]:
-    # Gom các metric thành 1 dòng để dễ so sánh giữa các model.
-    return {
-        "family": family,
-        "model": model,
-        "split": split,
-        "accuracy": accuracy_score(y_true, y_pred),
-        "precision": precision_score(y_true, y_pred, zero_division=0),
-        "recall": recall_score(y_true, y_pred, zero_division=0),
-        "f1": f1_score(y_true, y_pred, zero_division=0),
-        "params": "" if params is None else json.dumps(params, sort_keys=True),
-    }
-
-```
-Thay vì phải tính từng metric rồi lưu riêng lẻ, *metric_row* lưu vào một dòng dữ liệu thống nhất đưa vào bảng hoặc DataFrame để so sánh nhiều mô hình.
-
+Nhận xét: Việc tiền xử lý giúp giảm nhiễu và cải thiện chất lượng feature.
 
 ## 4. Phân tích dữ liệu (EDA)
 
@@ -139,43 +133,7 @@ Top word = "*trump*"
 
 Nhận xét: Việc phân tích này giúp hiểu rõ đặc trưng của dữ liệu trước khi modeling.
 
-## 5. Biểu diễn dữ liệu (Feature Engineering)
-Máy học không hiểu text -> cần chuyển sang dạng số.
-
-### 5.1. Giới thiệu TF-IDF
-
-TF-IDF (Term Frequency – Inverse Document Frequency) là phương pháp biểu diễn văn bản phổ biến, cho phép đánh giá mức độ quan trọng của một từ trong một tài liệu so với toàn bộ tập dữ liệu.
-Cụ thể, TF-IDF tăng trọng số cho những từ xuất hiện nhiều trong một văn bản nhưng hiếm trong các văn bản khác, từ đó giúp mô hình học máy tập trung vào các đặc trưng có giá trị phân biệt cao. Phương pháp này được sử dụng rộng rãi trong các hệ thống phân loại văn bản và phát hiện tin giả.
-
-
-### 5.2. Tokenization (Deep Learning)
-Trong các mô hình học sâu xử lý ngôn ngữ tự nhiên (NLP), văn bản cần được chuyển đổi thành dạng số để mô hình có thể hiểu và học được. 
-
-Hai bước cơ bản bao gồm:
-- Chuyển text -> sequence \
-    Biến mỗi từ (token) trong văn bản thành một số nguyên mà vẫn giữ nguyên thứ tự.
-    Thực hiện dùng `Tokenizer` trong Keras/TensorFlow.
-- Padding để cùng độ dài \
-    Các câu có độ dài khác nhau, cần chuẩn hóa về cùng một độ dài để đưa vào mô hình.
-    Thực hiện dùng `pad_sequences`.
-
-
-## 6. Mô hình
-### 6.1. Baseline (TF-IDF + Linear Model)
-
-- Nhanh
-- Dễ triển khai
-- Hiệu quả cao trong text classification
-
-
-### 6.2. Deep Learning (LSTM / BERT)
-
-- Hiểu ngữ cảnh tốt hơn
-- Phù hợp với dữ liệu phức tạp
-
-Các nghiên cứu cho thấy các mô hình học sâu và SVM có thể đạt độ chính xác cao hơn so với các phương pháp truyền thống.
-
-## 7. Huấn luyện mô hình
+## 5. Huấn luyện mô hình
 ### Quy trình:
 
 1. Chia dữ liệu 
@@ -183,17 +141,21 @@ Các nghiên cứu cho thấy các mô hình học sâu và SVM có thể đạt
 3. Điều chỉnh siêu tham số (Tuning hyperparameters)  
 4. Sử dụng callbacks để tránh overfitting  
 
-### 7.1. Chia tập train/validation/test
-Logic chia dữ liệu theo tỉ lệ chuẩn để đảm bảo mô hình được đánh giá đúng.
+### 5.1. Chia tập train/validation/test
+Notebook chia dữ liệu thành ba phần:
+- `train`
+- `validation`
+- `test`
 
+theo cấu hình:
 ```python
-# Chia dữ liệu cho nhánh baseline và nhánh transformer.
-X = df["content"]
-X_raw = df["raw_content"]
-y = df["label"]
+test_size = 0.2
+val_size = 0.1
 ```
-X dùng cho TF-IDF \
-X_raw dùng cho DistilBERT.
+
+Notebook chia song song hai nhánh dữ liệu:
+- `X = df["content"]` cho baseline
+- `X_raw = df["raw_content"]` cho DistilBERT
 
 Chia train và test 
 ```python 
@@ -246,9 +208,10 @@ Tỉ lệ cuối cùng:
 - val ~ 10%
 - test ~ 20%
 
-### 7.2. Train các baseline 
+### 5.2. Train các baseline 
 Sau khi huấn luyện sẽ so sánh trên tập validation.
 
+Phần baseline của project dùng `TfidfVectorizer` với cấu hình:
 ```python
 # Khối tiền xử lý đặc trưng của văn bản: biến dữ liệu text thành vector TF-IDF.
 base_tfidf = TfidfVectorizer(
@@ -259,9 +222,12 @@ base_tfidf = TfidfVectorizer(
     ngram_range=cfg.ngram_range,
 )
 ```
+Trên nền TF-IDF, notebook so sánh ba baseline:
+- `MultinomialNB`
+- `LogisticRegression`
+- `LinearSVC`
 
-Định nghĩa các baseline models và grid tham số.
-Mỗi mô hình bao gồm:
+Mỗi baseline bao gồm:
 - pipeline: nối bước TF-IDF với classifier.
 - params: tập hyperpaprameters.
 ```python
@@ -291,15 +257,15 @@ model_specs = {
     },
 }
 ```
+Trong rất nhiều bài toán text classification, đặc biệt khi dữ liệu đã được làm sạch tốt, các mô hình tuyến tính vẫn ổn định, dễ giải thích hơn *transformer*, và đôi khi cho hiệu quả vượt mong đợi.
 
-### 7.3. Tuning hyperparameters
+### 5.3. Tuning hyperparameters
 `RandomizedSearchCV` chọn ngẫu nhiên một số lượng tổ hợp để thử nghiệm.
 
 Ưu điểm:
 - Nhanh hơn GridSearchCV: Khi không gian siêu tham số lớn, *RandomizedSearchCV* tiết kiệm thời gian và tài nguyên.
 - Có thể chỉ định số lần thử `n_iter` để kiểm soát độ rộng tìm kiếm.
 ```python
-#RandomizedSearchCV
 search = RandomizedSearchCV(
         estimator=spec["pipe"],
         param_distributions=spec["params"],
@@ -313,11 +279,128 @@ search = RandomizedSearchCV(
     search.fit(X_train, y_train)
 ```
 
-## 8. Đánh giá mô hình
+### 5.4. Huấn luyện lại train và validation trước khi đánh giá 
+
+```python
+# Train lại baseline tốt nhất trên `train + validation`.
+best_spec = model_specs[best_model_name]
+best_search = RandomizedSearchCV(
+    estimator=best_spec["pipe"],
+    param_distributions=best_spec["params"],
+    n_iter=12,
+    scoring="f1",
+    cv=cfg.cv,
+    n_jobs=-1,
+    random_state=SEED,
+    refit=True,
+)
+
+#Fit trên tập train & validation 
+best_search.fit(pd.concat([X_train, X_val]), pd.concat([y_train, y_val]))
+
+# Dự đoán trên test 
+tfidf_pred = best_search.best_estimator_.predict(X_test)
+```
+Sau đó cần lưu các mẫu baseline dự đoán sai vào file csv mới để phân tích sau: "error_samples.csv".
+
+## 6. DistilBERT
+DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được huấn luyện bằng kỹ thuật *knowledge distillation*, tức là một mô hình nhỏ hơn (student) học cách bắt chước mô hình lớn hơn (teacher – BERT).
+
+```python
+# DistilBERT dùng model public, nên không cần Hugging Face token.
+# Tokenizer biến text thành token id để model đọc được.
+tok = AutoTokenizer.from_pretrained(cfg.model_ckpt, token=None)
+# Chuẩn bị dataset từ pandas 
+dset = DatasetDict(
+    {
+        "train": Dataset.from_pandas(pd.DataFrame({"text": X_tr, "labels": y_tr}), preserve_index=False),
+        "validation": Dataset.from_pandas(pd.DataFrame({"text": X_raw_val, "labels": y_val}), preserve_index=False),
+        "test": Dataset.from_pandas(pd.DataFrame({"text": X_raw_test, "labels": y_test}), preserve_index=False),
+    }
+)
+
+#Tokenize dữ liệu 
+dset = dset.map(
+    lambda batch: tok(batch["text"], truncation=True, max_length=cfg.max_len),
+    batched=True,
+).remove_columns(["text"])
+
+# Tải model pre-trained rồi đổi head cho bài toán 2 lớp.
+model = AutoModelForSequenceClassification.from_pretrained(
+    cfg.model_ckpt,
+    num_labels=2,
+    id2label=names,
+    label2id={v: k for k, v in names.items()},
+    token=None,
+)
+```
+#### Train DistilBERT
+
+Hàm tính Metric
+```python
+def trf_metrics(eval_pred):
+    logits, labels = eval_pred
+    pred = np.argmax(logits, axis=-1)
+    return {
+        "accuracy": accuracy_score(labels, pred),
+        "precision": precision_score(labels, pred, zero_division=0),
+        "recall": recall_score(labels, pred, zero_division=0),
+        "f1": f1_score(labels, pred, zero_division=0),
+    }
+```
+
+Tạo `TrainingArguments` theo kiểu tương thích nhiều version.
+```python
+#Lọc tham số 
+common = {
+    "output_dir": str(cfg.out_dir / "transformer_run"),
+    "learning_rate": cfg.lr,
+    "per_device_train_batch_size": cfg.train_bs,
+    "per_device_eval_batch_size": cfg.eval_bs,
+    "num_train_epochs": cfg.epochs,
+    "weight_decay": cfg.wd,
+    "save_strategy": "epoch",
+    "load_best_model_at_end": True,
+    "metric_for_best_model": "f1",
+    "report_to": "none",
+    "fp16": torch.cuda.is_available(),
+}
+```
+
+Tương tự với tạo *trainer* 
+```python
+def make_trainer(model, args, train_dataset, eval_dataset, tokenizer):
+    trainer_kwargs = {
+        "model": model,
+        "args": args,
+        "train_dataset": train_dataset,
+        "eval_dataset": eval_dataset,
+        "data_collator": DataCollatorWithPadding(tokenizer=tokenizer),
+        "compute_metrics": trf_metrics,
+    }
+    trainer_signature = inspect.signature(Trainer.__init__)
+    if "processing_class" in trainer_signature.parameters:
+        trainer_kwargs["processing_class"] = tokenizer
+    elif "tokenizer" in trainer_signature.parameters:
+        trainer_kwargs["tokenizer"] = tokenizer
+    return Trainer(**trainer_kwargs)
+```
+
+```python
+# Trainer là bộ khung train/eval có sẵn của Hugging Face.
+    trainer = make_trainer(
+        model=model,
+        args=make_args(),
+        train_dataset=dset["train"],
+        eval_dataset=dset["validation"],
+        tokenizer=tok,
+    )
+```
+
+## 7. Đánh giá và phân tích lỗi 
 Đánh giá DistilBERT trên *validation* và *test*.
 
-Không chỉ dùng accuracy, cần sử dụng:
-
+Không chỉ dùng *accuracy*, cần sử dụng:
 - Precision  
 - Recall  
 - F1-score  
@@ -348,7 +431,7 @@ Nhận xét: F1-score đặc biệt quan trọng trong bài toán này vì cần
 
 Mô hình được đánh giá trên tập validation và test, kết quả như sau:
 
-## 9. Kết quả và phân tích
+### Kết quả và phân tích
 - Model đạt độ chính xác: ...  
 - So sánh giữa các model  
 
@@ -356,14 +439,47 @@ Mô hình được đánh giá trên tập validation và test, kết quả như
 - Model nào tốt hơn?
 - Vì sao?
 
-## 10. Phân tích lỗi (Error Analysis)
+### Phân tích lỗi (Error Analysis)
 - Các trường hợp model dự đoán sai  
 - Nguyên nhân:
   - ngôn ngữ mơ hồ
   - thiếu context
   - tiêu đề gây hiểu nhầm  
 
-Nhận xét: Đây là phần thể hiện tư duy Data Science rõ nhất.
+```python
+# Tạo bảng xếp hạng và lưu manifest.
+val_frames = [val_df] + ([trf_val] if not trf_val.empty else [])
+test_frames = [tfidf_test] + ([trf_test] if not trf_test.empty else [])
+
+val_board = pd.concat(val_frames, ignore_index=True).sort_values(["f1", "accuracy"], ascending=False)
+test_board = pd.concat(test_frames, ignore_index=True).sort_values(["f1", "accuracy"], ascending=False)
+
+val_path = cfg.out_dir / "val_results.csv"
+test_path = cfg.out_dir / "test_results.csv"
+manifest_path = cfg.out_dir / "manifest.json"
+
+val_board.to_csv(val_path, index=False)
+test_board.to_csv(test_path, index=False)
+
+manifest = {
+    "csv_path": str(get_csv()),
+    "out_dir": str(cfg.out_dir),
+    "best_family": test_board.iloc[0]["family"],
+    "best_model": test_board.iloc[0]["model"],
+    "tfidf_pipeline": str(pipe_path),
+    "error_samples": str(err_path),
+    "transformer_dir": None if trf_path is None else str(trf_path),
+    "val_results": str(val_path),
+    "test_results": str(test_path),
+}
+manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+# `manifest` giúp UI biết cần đọc file nào.
+
+display(val_board.reset_index(drop=True))
+display(test_board.reset_index(drop=True))
+display(pd.DataFrame([manifest]))
+```
 
 
 ## 11. Hạn chế
