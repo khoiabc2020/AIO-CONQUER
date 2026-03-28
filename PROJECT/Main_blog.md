@@ -212,6 +212,8 @@ Các nghiên cứu cho thấy các mô hình học sâu và SVM có thể đạt
 ### 7.2. Train các baseline 
 
 ## 8. Đánh giá mô hình
+Đánh giá DistilBERT trên *validation* và *test*.
+
 Không chỉ dùng accuracy, cần sử dụng:
 
 - Precision  
@@ -219,8 +221,30 @@ Không chỉ dùng accuracy, cần sử dụng:
 - F1-score  
 - Confusion Matrix  
 
---> F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
 
+```python
+# trf_val là kết quả validation
+trf_val = pd.DataFrame(
+    [
+        {
+            "family": "transformer",
+            "model": cfg.model_ckpt,
+            "split": "val",
+            "accuracy": float(val_out["eval_accuracy"]),
+            "precision": float(val_out["eval_precision"]),
+            "recall": float(val_out["eval_recall"]),
+            "f1": float(val_out["eval_f1"]),
+            "params": "",
+        }
+    ]
+)
+
+# trf_test là kết quả test
+trf_test = pd.DataFrame([metric_row("transformer", cfg.model_ckpt, "test", y_test, trf_pred)])
+```
+Nhận xét: F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
+
+Mô hình được đánh giá trên tập validation và test, kết quả như sau:
 
 ## 9. Kết quả và phân tích
 - Model đạt độ chính xác: ...  
