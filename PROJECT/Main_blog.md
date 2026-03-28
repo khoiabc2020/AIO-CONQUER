@@ -216,7 +216,7 @@ X = df["content"]
 X_raw = df["raw_content"]
 y = df["label"]
 ```
-X dùng cho TF-IDF
+X dùng cho TF-IDF \
 X_raw dùng cho DistilBERT.
 
 Chia train và test 
