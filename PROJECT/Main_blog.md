@@ -89,9 +89,11 @@ Vai trò của EDA:
 
 Qua đó, ta có cái nhìn trực quan về dữ liệu, từ đó định hướng các bước tiền xử lý và lựa chọn mô hình phù hợp.
 
-### 4.1. Phân bố nhãn
+### 4.1. Phân bố nhãn và độ dài văm bản
 - Đếm số lượng từng phần tử "real"/"fake" trong cột "label"
-- Sử dụng **value_counts** 
+- Tin giả và tin thật có độ dài khác nhau không?
+
+Sử dụng **value_counts** 
 ```python
 fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
 count_df = df["label"].value_counts().sort_index().rename(index=names).reset_index()
@@ -99,19 +101,10 @@ count_df.columns = ["label_name", "count"]
 ```
 Sau đó tạo biểu đồ bởi seaborn trả kết quả, mỗi cột thêm thông tin rõ ràng.
 
+![alt text](image5.png)
 Nhận xét: Tình trạng số lượng mẫu dữ liệu gần như bằng nhau.
 
-![alt text](image1.png)
-
-### 4.2 Độ dài văn bản
-- Tin giả và tin thật có độ dài khác nhau không?
-
-Tạo biểu đồ histogram hiển thị "Độ dài nội dung"
-
-![alt text](image2.png)
-
-
-### 4.3. Phân cấp độ dài tiêu đề và chữ 
+### 4.2. Phân cấp độ dài tiêu đề và chữ 
 Tương tự, so sánh độ dài tiêu đề và chữ theo từng lớp.
 
 ![alt text](image3.png)
