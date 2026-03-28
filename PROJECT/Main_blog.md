@@ -64,165 +64,98 @@ def clean(text: str) -> str:
 Hàm *metric_row* gom các chỉ số đánh giá của một mô hình phân loại thành một dòng dữ liệu dạng *dictionary* để dễ so sánh giữa các mô hình khác nhau.
 
 ```python
+# Hàm tính metric và vẽ confusion matrix.
 def metric_row(family: str, model: str, split: str, y_true, y_pred, params=None) -> dict[str, object]:
+    # Gom các metric thành 1 dòng để dễ so sánh giữa các model.
     return {
         "family": family,
         "model": model,
         "split": split,
-        "accuracy": accuracy_score(y_true, y_pred), #Độ chính xác
-        "precision": precision_score(y_true, y_pred, zero_division=0), 
-        "recall": recall_score(y_true, y_pred, zero_division=0), #Độ bao phủ 
+        "accuracy": accuracy_score(y_true, y_pred),
+        "precision": precision_score(y_true, y_pred, zero_division=0),
+        "recall": recall_score(y_true, y_pred, zero_division=0),
         "f1": f1_score(y_true, y_pred, zero_division=0),
         "params": "" if params is None else json.dumps(params, sort_keys=True),
     }
+
 ```
 Thay vì phải tính từng metric rồi lưu riêng lẻ, *metric_row* lưu vào một dòng dữ liệu thống nhất đưa vào bảng hoặc DataFrame để so sánh nhiều mô hình.
-
-## 3.3. Đánh giá mô hình phân loại 
-```python
-def show_report(y_true, y_pred, title: str, names: dict[int, str]) -> None:
-    # Hiện classification report và confusion matrix.
-    display(pd.DataFrame(classification_report(y_true, y_pred, output_dict=True, zero_division=0)).T)
-    #Ma trận nhầm lẫn 
-    cm = confusion_matrix(y_true, y_pred)
-    #Vẽ heatmap 
-    ax = sns.heatmap(
-        cm,
-        annot=True,
-        fmt="d",
-        cmap="Blues",
-        cbar=False,
-        xticklabels=[names[0], names[1]],
-        yticklabels=[names[0], names[1]],
-    )
-    ax.set_title(title)
-    ax.set_xlabel("Pred")
-    ax.set_ylabel("True")
-    plt.tight_layout()
-    plt.show()
-```
 
 
 ## 4. Phân tích dữ liệu (EDA)
 
 Trước khi xây dựng mô hình, bước quan trọng là khám phá và hiểu rõ đặc điểm của tập dữ liệu.  
 Vai trò của EDA:
-- Kiểm tra sự cân bằng giữa các lớp (tin giả và tin thật).
 - Quan sát phân phối độ dài nội dung theo từng lớp.
 - Phát hiện các đặc điểm bất thường hoặc thiên lệch trong dữ liệu.
 
 Qua đó, ta có cái nhìn trực quan về dữ liệu, từ đó định hướng các bước tiền xử lý và lựa chọn mô hình phù hợp.
 
 ### 4.1. Phân bố nhãn
-- Tỷ lệ "*fake*" và "*real*"
+- Đếm số lượng từng phần tử "real"/"fake" trong cột "label"
+- Sử dụng **value_counts** 
 ```python
-# Plot class balance and content length by class.
 fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
-
-#Đếm số lượng từng phần tử "real"/"fake" trong cột "label"
 count_df = df["label"].value_counts().sort_index().rename(index=names).reset_index()
 count_df.columns = ["label_name", "count"]
-
-#Tạo biểu đồ cột
-sns.barplot(
-    data=count_df,
-    x="label_name",
-    y="count",
-    ax=axes[0],
-    hue="label_name",
-    dodge=False,
-    palette=[palette[0], palette[1]],
-    legend=False,
-)
-axes[0].set_title("Class balance")
-axes[0].set_xlabel("")
-axes[0].set_ylabel("Rows")
-#Thêm số lượng cụ thể mỗi cột 
-for idx, row in count_df.iterrows():
-    axes[0].text(idx, row["count"], f'{row["count"]:,}', ha="center", va="bottom", fontsize=10)
 ```
+Sau đó tạo biểu đồ bởi seaborn trả kết quả, mỗi cột thêm thông tin rõ ràng.
+
+```python
+sns.barplot()
+#Với dữ liệu lấy từ count_df
+data=count_df
+```
+
+Nhận xét: Tình trạng số lượng mẫu dữ liệu gần như bằng nhau.
 ![alt text](image1.png)
 
 ### 4.2 Độ dài văn bản
 - Tin giả và tin thật có độ dài khác nhau không?
 
-```python 
-#Biểu đồ histogram: Độ dài nội dung 
-sns.histplot(
-    data=df,
-    x="content_len",
-    hue="label",
-    bins=40,
-    kde=True,
-    stat="density",
-    common_norm=False,
-    palette=palette,
-    ax=axes[1],
-)
-axes[1].set_title("Content length by class")
-axes[1].set_xlabel("Words")
-
-plt.tight_layout()
-plt.show()
+Tạo biểu đồ histogram hiển thị "Độ dài nội dung"
+```python
+sns.histplot()
+data=df
 ```
 ![alt text](image2.png)
 
 
 ### 4.3. Phân cấp độ dài tiêu đề và chữ 
-
+Tương tự, so sánh độ dài tiêu đề và chữ theo từng lớp.
 ```python
-# Compare title length and text length by class.
-fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
-
-sns.boxplot(data=df, x="label", y="title_len", hue="label", dodge=False, palette=palette, ax=axes[0], legend=False)
-axes[0].set_title("Title length by class")
-axes[0].set_xticklabels([names[0], names[1]])
-axes[0].set_xlabel("")
-axes[0].set_ylabel("Words")
-
-sns.boxplot(data=df, x="label", y="text_len", hue="label", dodge=False, palette=palette, ax=axes[1], legend=False)
-axes[1].set_title("Text length by class")
-axes[1].set_xticklabels([names[0], names[1]])
-axes[1].set_xlabel("")
-axes[1].set_ylabel("Words")
-
-plt.tight_layout()
-plt.show()
+sns.histplot()
+data = df 
 ```
-
 ![alt text](image3.png)
 
 ### 4.4. Từ vựng phổ biến
-- Các từ thường xuất hiện trong fake news
-
+- Các từ thường xuất hiện trong tin giả
+Vẫn sử dụng hàm **Counter** đếm label 
 ```python
-# Show the most frequent words in fake and real samples.
 fake_words = Counter(" ".join(df.loc[df["label"] == 1, "content"]).split()).most_common(15)
 real_words = Counter(" ".join(df.loc[df["label"] == 0, "content"]).split()).most_common(15)
-
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-
-sns.barplot(
-    data=pd.DataFrame(fake_words, columns=["word", "count"]),
-    x="count",
-    y="word",
-    ax=axes[0],
-    color=palette[1],
-)
-axes[0].set_title("Top words in fake news")
-
-sns.barplot(
-    data=pd.DataFrame(real_words, columns=["word", "count"]),
-    x="count",
-    y="word",
-    ax=axes[1],
-    color=palette[0],
-)
-axes[1].set_title("Top words in real news")
-
-plt.tight_layout()
-plt.show()
 ```
+
+Tần suất các từ xuất hiện trong **tin giả**.
+```python
+sns.barplot()  
+#cột x = label, y = số lượng 
+data=pd.DataFrame(fake_words, columns=["word", "count"]),
+```
+Nội dung bài báo ghi nhận từ chính các nhân vật trong bài báo chiếm phần lớn là thông tin sai.
+
+![alt text](image4.png)
+
+Tần suất các từ xuất hiện trong **tin thật**.
+```python
+sns.barplot()
+#Lấy từ biến real_words 
+data=pd.DataFrame(real_words, columns=["word", "count"]),
+```
+![alt text](image5.png)
+
+Top word = "*trump*"
 
 Nhận xét: Việc phân tích này giúp hiểu rõ đặc trưng của dữ liệu trước khi modeling.
 
