@@ -105,32 +105,21 @@ count_df.columns = ["label_name", "count"]
 ```
 Sau đó tạo biểu đồ bởi seaborn trả kết quả, mỗi cột thêm thông tin rõ ràng.
 
-```python
-sns.barplot()
-#Với dữ liệu lấy từ count_df
-data=count_df
-```
-
 Nhận xét: Tình trạng số lượng mẫu dữ liệu gần như bằng nhau.
+
 ![alt text](image1.png)
 
 ### 4.2 Độ dài văn bản
 - Tin giả và tin thật có độ dài khác nhau không?
 
 Tạo biểu đồ histogram hiển thị "Độ dài nội dung"
-```python
-sns.histplot()
-data=df
-```
+
 ![alt text](image2.png)
 
 
 ### 4.3. Phân cấp độ dài tiêu đề và chữ 
 Tương tự, so sánh độ dài tiêu đề và chữ theo từng lớp.
-```python
-sns.histplot()
-data = df 
-```
+
 ![alt text](image3.png)
 
 ### 4.4. Từ vựng phổ biến
@@ -142,21 +131,13 @@ real_words = Counter(" ".join(df.loc[df["label"] == 0, "content"]).split()).most
 ```
 
 Tần suất các từ xuất hiện trong **tin giả**.
-```python
-sns.barplot()  
-#cột x = label, y = số lượng 
-data=pd.DataFrame(fake_words, columns=["word", "count"]),
-```
+
 Nội dung bài báo ghi lại từ lời nói các nhân vật chiếm phần lớn là thông tin sai.
 
 ![alt text](image4.png)
 
 Tần suất các từ xuất hiện trong **tin thật**.
-```python
-sns.barplot()
-#Lấy từ biến real_words 
-data=pd.DataFrame(real_words, columns=["word", "count"]),
-```
+
 ![alt text](image5.png)
 
 Top word = "*trump*"
