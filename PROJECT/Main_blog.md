@@ -204,12 +204,111 @@ Các nghiên cứu cho thấy các mô hình học sâu và SVM có thể đạt
 
 1. Chia dữ liệu 
 2. Huấn luyện model  
-3. Tuning hyperparameters  
+3. Điều chỉnh siêu tham số (Tuning hyperparameters)  
 4. Sử dụng callbacks để tránh overfitting  
 
 ### 7.1. Chia tập train/validation/test
+Logic chia dữ liệu theo tỉ lệ chuẩn để đảm bảo mô hình được đánh giá đúng.
+
+```python
+# Chia dữ liệu cho nhánh baseline và nhánh transformer.
+X = df["content"]
+X_raw = df["raw_content"]
+y = df["label"]
+
+# `X` dùng cho TF-IDF, `X_raw` dùng cho DistilBERT.
+# Chia train và test 
+X_tv, X_test, y_tv, y_test = train_test_split(
+    X,
+    y,
+    test_size=cfg.test_size,
+    stratify=y,
+    random_state=SEED,
+)
+
+# Tính tỉ lệ validation trong phần train và val 
+val_ratio = cfg.val_size / (1 - cfg.test_size)
+
+# Chia tiết train và val 
+X_train, X_val, y_train, y_val = train_test_split(
+    X_tv,
+    y_tv,
+    test_size=val_ratio,
+    stratify=y_tv,
+    random_state=SEED,
+)
+# Tỉ lệ cuối cùng:
+# - train ~ 70%
+# - val ~ 10%
+# - test ~ 20%
+```
 
 ### 7.2. Train các baseline 
+Sau khi huấn luyện sẽ so sánh trên tập validation.
+
+```python
+# Khối tiền xử lý đặc trưng của văn bản: biến dữ liệu text thành vector TF-IDF.
+base_tfidf = TfidfVectorizer(
+    stop_words="english",
+    max_features=cfg.max_features,
+    min_df=cfg.min_df,
+    max_df=cfg.max_df,
+    ngram_range=cfg.ngram_range,
+)
+```
+
+Định nghĩa các baseline models và grid tham số.
+Mỗi mô hình bao gồm:
+- pipeline: nối bước TF-IDF với classifier.
+- params: tập hyperpaprameters.
+```python
+model_specs = {
+    # Mô hình 1: Naive Bayes (MultinomialNB) - phù hợp cho dạng dữ liệu text rời rạc, nhanh, thường là baseline mạnh mẽ.
+    "naive_bayes": {
+        "pipe": Pipeline([("tfidf", base_tfidf), ("clf", MultinomialNB())]),
+        "params": {"clf__alpha": np.logspace(-3, 1, 30)},
+    },
+
+    # Mô hình 2: Logistic Regression - mô hình tuyến tính ân bằng class imbalance qua class_weight.
+    "logistic_regression": {
+        "pipe": Pipeline([("tfidf", base_tfidf), ("clf", LogisticRegression(max_iter=2000))]),
+        "params": {
+            "clf__C": np.logspace(-3, 2, 40),
+            "clf__class_weight": [None, "balanced"],
+        },
+    },
+
+    # Mô hình 3: Linear SVC - tối ưu margin 
+    "linear_svc": {
+        "pipe": Pipeline([("tfidf", base_tfidf), ("clf", LinearSVC())]),
+        "params": {
+            "clf__C": np.logspace(-3, 2, 40),
+            "clf__class_weight": [None, "balanced"],
+        },
+    },
+}
+```
+
+### 7.3. Tuning hyperparameters
+`RandomizedSearchCV` chọn ngẫu nhiên một số lượng tổ hợp để thử nghiệm.
+
+Ưu điểm:
+- Nhanh hơn GridSearchCV: Khi không gian siêu tham số lớn, *RandomizedSearchCV* tiết kiệm thời gian và tài nguyên.
+- Có thể chỉ định số lần thử `n_iter` để kiểm soát độ rộng tìm kiếm.
+```python
+#RandomizedSearchCV
+search = RandomizedSearchCV(
+        estimator=spec["pipe"],
+        param_distributions=spec["params"],
+        n_iter=12,
+        scoring="f1",
+        cv=cfg.cv,
+        n_jobs=-1,
+        random_state=SEED,
+        refit=True,
+    )
+    search.fit(X_train, y_train)
+```
 
 ## 8. Đánh giá mô hình
 Đánh giá DistilBERT trên *validation* và *test*.
