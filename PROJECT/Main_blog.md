@@ -130,15 +130,10 @@ fake_words = Counter(" ".join(df.loc[df["label"] == 1, "content"]).split()).most
 real_words = Counter(" ".join(df.loc[df["label"] == 0, "content"]).split()).most_common(15)
 ```
 
-Tần suất các từ xuất hiện trong **tin giả**.
-
-Nội dung bài báo ghi lại từ lời nói các nhân vật chiếm phần lớn là thông tin sai.
-
+Tần suất các từ xuất hiện trong **tin giả** và **tin thật**.
 ![alt text](image4.png)
 
-Tần suất các từ xuất hiện trong **tin thật**.
-
-![alt text](image5.png)
+Nội dung bài báo ghi lại từ lời nói các nhân vật chiếm phần lớn là thông tin sai.
 
 Top word = "*trump*"
 
