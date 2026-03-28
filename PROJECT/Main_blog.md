@@ -263,6 +263,11 @@ Tỉ lệ cuối cùng:
 - val ~ 10%
 - test ~ 20%
 
+||split|rows|
+|---|---|---|
+|0|train|44542
+|1|val|6364|
+|2|test|12727|
 
 ### 7.2. Train các baseline 
 Sau khi huấn luyện sẽ so sánh trên tập validation.
