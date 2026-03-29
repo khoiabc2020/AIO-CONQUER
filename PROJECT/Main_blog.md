@@ -89,8 +89,8 @@ Vai trò của EDA:
 
 Qua đó, ta có cái nhìn trực quan về dữ liệu, từ đó định hướng các bước tiền xử lý và lựa chọn mô hình phù hợp.
 
-### 4.1. Phân bố nhãn và độ dài văm bản
-- Đếm số lượng từng phần tử "real"/"fake" trong cột "label"
+### 4.1. Phân bố nhãn và độ dài văn bản
+- Đếm số lượng từng phần tử "real"/"fake" trong cột "label".
 - Tin giả và tin thật có độ dài khác nhau không?
 
 Sử dụng **value_counts** 
@@ -101,11 +101,14 @@ count_df.columns = ["label_name", "count"]
 ```
 Sau đó tạo biểu đồ bởi seaborn trả kết quả, mỗi cột thêm thông tin rõ ràng.
 
+data = count_df, data = df
 ![alt text](image5.png)
 Nhận xét: Tình trạng số lượng mẫu dữ liệu gần như bằng nhau.
 
 ### 4.2. Phân cấp độ dài tiêu đề và chữ 
 Tương tự, so sánh độ dài tiêu đề và chữ theo từng lớp.
+
+ax = axes[0], ax = axes[1]
 
 ![alt text](image3.png)
 
@@ -296,9 +299,12 @@ tfidf_pred = best_search.best_estimator_.predict(X_test)
 ```
 Sau đó cần lưu các mẫu baseline dự đoán sai vào file csv mới để phân tích sau: "error_samples.csv".
 
+### 5.5. Baseline tốt nhất 
+
 ## 6. DistilBERT
 DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được huấn luyện bằng kỹ thuật *knowledge distillation*, tức là một mô hình nhỏ hơn (student) học cách bắt chước mô hình lớn hơn (teacher – BERT).
 
+### 6.1. Chuẩn bị dữ liệu cho DistilBERT
 ```python
 # DistilBERT dùng model public, nên không cần Hugging Face token.
 # Tokenizer biến text thành token id để model đọc được.
@@ -311,14 +317,20 @@ dset = DatasetDict(
         "test": Dataset.from_pandas(pd.DataFrame({"text": X_raw_test, "labels": y_test}), preserve_index=False),
     }
 )
+```
 
-#Tokenize dữ liệu 
+Biến văn bản thành *token ID* và *attention mask*.
+- Bước chuẩn hóa dữ liệu để mô hình hiểu được. DistilBERT vốn đã học ngữ nghĩa từ corpora lớn, nên chỉ cần token hóa là có thể fine-tune cho bài toán phân loại tin giả.
+```python
 dset = dset.map(
+    # Đảm bảo văn bản dài được cắt gọn, tránh vượt giới hạn mô hình
     lambda batch: tok(batch["text"], truncation=True, max_length=cfg.max_len),
     batched=True,
-).remove_columns(["text"])
+).remove_columns(["text"]) #Chỉ giữ dữ liệu đã mã hóa
+```
 
-# Tải model pre-trained rồi đổi head cho bài toán 2 lớp.
+Tải model pre-trained rồi đổi head cho bài toán 2 lớp (fake và real)
+```python
 model = AutoModelForSequenceClassification.from_pretrained(
     cfg.model_ckpt,
     num_labels=2,
@@ -327,40 +339,45 @@ model = AutoModelForSequenceClassification.from_pretrained(
     token=None,
 )
 ```
-#### Train DistilBERT
+DistilBERT được chọn vì *nhẹ hơn* BERT nhưng vẫn giữ hiệu năng cao (~97%), phù hợp cho bài toán phân loại tin giả.
 
-Hàm tính Metric
+Pipeline này cho phép *fine-tune* nhanh trên WelFake dataset, đảm bảo mô hình vừa chính xác vừa hiệu quả triển khai.
+
+### 6.2. Train DistilBERT
+
+Tạo hàm *make_args* cấu hình toàn bộ quá trình huấn luyện DistilBERT.
 ```python
-def trf_metrics(eval_pred):
-    logits, labels = eval_pred
-    pred = np.argmax(logits, axis=-1)
-    return {
-        "accuracy": accuracy_score(labels, pred),
-        "precision": precision_score(labels, pred, zero_division=0),
-        "recall": recall_score(labels, pred, zero_division=0),
-        "f1": f1_score(labels, pred, zero_division=0),
+def make_args():
+    # Tạo dictionary cấu hình chung
+    common = {
+        "output_dir": str(cfg.out_dir / "transformer_run"),
+        "learning_rate": cfg.lr,
+        "per_device_train_batch_size": cfg.train_bs,
+        "per_device_eval_batch_size": cfg.eval_bs,
+        "num_train_epochs": cfg.epochs,
+        "weight_decay": cfg.wd, # Hệ số regularization để tránh overfitting.
+        "save_strategy": "epoch",
+        "load_best_model_at_end": True,
+        "metric_for_best_model": "f1",
+        "report_to": "none",
+        "fp16": gpu_ready,
+        "dataloader_pin_memory": gpu_ready,
+        "dataloader_num_workers": 2,
     }
-```
 
-Tạo `TrainingArguments` theo kiểu tương thích nhiều version.
-```python
-#Lọc tham số 
-common = {
-    "output_dir": str(cfg.out_dir / "transformer_run"),
-    "learning_rate": cfg.lr,
-    "per_device_train_batch_size": cfg.train_bs,
-    "per_device_eval_batch_size": cfg.eval_bs,
-    "num_train_epochs": cfg.epochs,
-    "weight_decay": cfg.wd,
-    "save_strategy": "epoch",
-    "load_best_model_at_end": True,
-    "metric_for_best_model": "f1",
-    "report_to": "none",
-    "fp16": torch.cuda.is_available(),
-}
+    # Kiểm tra tên tham số trong TrainingArguments
+    arg_names = set(inspect.signature(TrainingArguments.__init__).parameters)
+    if "evaluation_strategy" in arg_names:
+        common["evaluation_strategy"] = "epoch"
+    elif "eval_strategy" in arg_names:
+        common["eval_strategy"] = "epoch"
+    common = {key: value for key, value in common.items() if key in arg_names}
+    return TrainingArguments(**common)
 ```
+--> Tối ưu GPU dùng fp16, pin_memory, num_workers tăng tốc độ huấn luyện.
 
-Tương tự với tạo *trainer* 
+
+Hàm tiện ích để khởi tạo Trainer một cách linh hoạt.
 ```python
 def make_trainer(model, args, train_dataset, eval_dataset, tokenizer):
     trainer_kwargs = {
@@ -372,6 +389,8 @@ def make_trainer(model, args, train_dataset, eval_dataset, tokenizer):
         "compute_metrics": trf_metrics,
     }
     trainer_signature = inspect.signature(Trainer.__init__)
+
+    # Tương thích ngược với nhiều phiên bản Transformers.
     if "processing_class" in trainer_signature.parameters:
         trainer_kwargs["processing_class"] = tokenizer
     elif "tokenizer" in trainer_signature.parameters:
@@ -379,15 +398,20 @@ def make_trainer(model, args, train_dataset, eval_dataset, tokenizer):
     return Trainer(**trainer_kwargs)
 ```
 
+
+Trainer là bộ khung train/eval có sẵn của Hugging Face, tự động lo việc:
+- train
+- eval
+- logging
+- checkpoint 
 ```python
-# Trainer là bộ khung train/eval có sẵn của Hugging Face.
-    trainer = make_trainer(
-        model=model,
-        args=make_args(),
-        train_dataset=dset["train"],
-        eval_dataset=dset["validation"],
-        tokenizer=tok,
-    )
+trainer = make_trainer(
+    model=model,
+    args=make_args(), # Chứa hyperparameters
+    train_dataset=dset["train"],
+    eval_dataset=dset["validation"],
+    tokenizer=tok,
+)
 ```
 
 ## 7. Đánh giá và phân tích lỗi 
@@ -422,7 +446,7 @@ trf_test = pd.DataFrame([metric_row("transformer", cfg.model_ckpt, "test", y_tes
 ```
 Nhận xét: F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
 
-Mô hình được đánh giá trên tập validation và test, kết quả như sau:
+Mô hình được đánh giá trên tập *validation* và *test*, kết quả như sau:
 
 ### Kết quả và phân tích
 - Model đạt độ chính xác: ...  
@@ -439,21 +463,30 @@ Mô hình được đánh giá trên tập validation và test, kết quả như
   - thiếu context
   - tiêu đề gây hiểu nhầm  
 
+Tạo bảng xếp hạng 
+- "*f1*" và "*accuracy*" giảm dần -> mô hình tốt nhất sẽ nằm trên đầu bảng.
 ```python
-# Tạo bảng xếp hạng và lưu manifest.
 val_frames = [val_df] + ([trf_val] if not trf_val.empty else [])
 test_frames = [tfidf_test] + ([trf_test] if not trf_test.empty else [])
 
 val_board = pd.concat(val_frames, ignore_index=True).sort_values(["f1", "accuracy"], ascending=False)
 test_board = pd.concat(test_frames, ignore_index=True).sort_values(["f1", "accuracy"], ascending=False)
+```
 
+Lưu bảng kết quả validation và test ra file "*.csv*"
+
+Đường dẫn được lấy từ "*cfg.out_dir*".
+```python
 val_path = cfg.out_dir / "val_results.csv"
 test_path = cfg.out_dir / "test_results.csv"
 manifest_path = cfg.out_dir / "manifest.json"
 
 val_board.to_csv(val_path, index=False)
 test_board.to_csv(test_path, index=False)
+```
 
+Tạo file manifest chứa mô hình tốt nhất, các pipeline, mẫu dữ liệu lỗi, kết quả test.
+```python 
 manifest = {
     "csv_path": str(get_csv()),
     "out_dir": str(cfg.out_dir),
@@ -466,27 +499,31 @@ manifest = {
     "test_results": str(test_path),
 }
 manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-
-# `manifest` giúp UI biết cần đọc file nào.
-
-display(val_board.reset_index(drop=True))
-display(test_board.reset_index(drop=True))
-display(pd.DataFrame([manifest]))
 ```
+Các artifact đầu ra hiện tại gồm:
+- tfidf_pipeline.joblib
+- error_samples.csv
+- transformer/
+- val_results.csv
+- test_results.csv
+- manifest.json
 
+## 11. Nhận xét
 
-## 11. Hạn chế
+Tất nhiên, hệ thống vẫn còn những giới hạn quen thuộc:
+- Phụ thuộc vào văn bản
+- Chưa khai thác metadata
+- DistilBERT chưa đi vào suy luận thật trong app
+- Chưa có đánh giá ngoài miền dữ liệu
+- Khả năng giải thích mô hình còn cơ bản
 
-- Dataset chưa đủ đa dạng  
-- Chỉ dựa vào text  
-- Không sử dụng context từ social media  
-
-
-## 12. Hướng phát triển
-
-- Sử dụng BERT / Transformer  
-- Kết hợp dữ liệu mạng xã hội  
-- Xây dựng hệ thống realtime  
+Hướng phát triển tiếp theo:
+- Đưa DistilBERT vào pipeline suy luận thật
+- Mở rộng dữ liệu hoặc đánh giá trên tập khác
+- Tăng cường explainability
+- Tách train pipeline và serving pipeline rõ hơn
+- Thêm calibration cho xác suất đầu ra
+- Thêm test tự động và chuẩn hóa cấu trúc project
 
 
 ## 13. Kết luận
