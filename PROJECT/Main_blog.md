@@ -255,7 +255,8 @@ model_specs = {
 ```
 Trong rất nhiều bài toán text classification, đặc biệt khi dữ liệu đã được làm sạch tốt, các mô hình tuyến tính vẫn ổn định, dễ giải thích hơn *transformer*, và đôi khi cho hiệu quả vượt mong đợi.
 
-### 5.3. Tuning hyperparameters
+#### **Tuning hyperparameters**
+
 `RandomizedSearchCV` chọn ngẫu nhiên một số lượng tổ hợp để thử nghiệm.
 
 Ưu điểm:
@@ -275,7 +276,7 @@ search = RandomizedSearchCV(
     search.fit(X_train, y_train)
 ```
 
-### 5.4. Huấn luyện lại train và validation trước khi đánh giá 
+### 5.3. Huấn luyện lại train và validation trước khi đánh giá 
 
 ```python
 # Train lại baseline tốt nhất trên `train + validation`.
@@ -299,7 +300,7 @@ tfidf_pred = best_search.best_estimator_.predict(X_test)
 ```
 Sau đó cần lưu các mẫu baseline dự đoán sai vào file csv mới để phân tích sau: "error_samples.csv".
 
-### 5.5. Baseline tốt nhất 
+### 5.4. Baseline tốt nhất 
 
 ## 6. DistilBERT
 DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được huấn luyện bằng kỹ thuật *knowledge distillation*, tức là một mô hình nhỏ hơn (student) học cách bắt chước mô hình lớn hơn (teacher – BERT).
