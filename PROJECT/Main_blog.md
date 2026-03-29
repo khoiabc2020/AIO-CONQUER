@@ -1,5 +1,4 @@
 ![alt text](image.png)
-# PHÁT HIỆN TIN GIẢ BẰNG MACHINE LEARNING
 
 Có những bài viết chỉ cần đọc tiêu đề là đã thấy “có mùi”, nhưng cũng có những bài được viết đủ khéo để đánh lừa cả người đọc cẩn thận. Đó là lúc bài toán phát hiện tin giả trở nên thú vị: ranh giới giữa đúng và sai không còn nằm ở vài từ khóa lộ liễu, mà nằm ở cách dữ liệu được biểu diễn, cách mô hình học ngữ cảnh và cách ta đánh giá nó một cách nghiêm túc.
 
@@ -276,7 +275,7 @@ search = RandomizedSearchCV(
     search.fit(X_train, y_train)
 ```
 
-### 5.3. Huấn luyện lại train và validation trước khi đánh giá 
+#### Huấn luyện lại train và validation trước khi đánh giá 
 
 ```python
 # Train lại baseline tốt nhất trên `train + validation`.
@@ -300,7 +299,7 @@ tfidf_pred = best_search.best_estimator_.predict(X_test)
 ```
 Sau đó cần lưu các mẫu baseline dự đoán sai vào file csv mới để phân tích sau: "error_samples.csv".
 
-### 5.4. Baseline tốt nhất 
+### 5.3. Baseline tốt nhất 
 
 ## 6. DistilBERT
 DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được huấn luyện bằng kỹ thuật *knowledge distillation*, tức là một mô hình nhỏ hơn (student) học cách bắt chước mô hình lớn hơn (teacher – BERT).
