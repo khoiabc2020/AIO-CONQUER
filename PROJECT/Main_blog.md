@@ -252,6 +252,7 @@ model_specs = {
     },
 }
 ```
+![alt text](image6.png)
 Trong rất nhiều bài toán text classification, đặc biệt khi dữ liệu đã được làm sạch tốt, các mô hình tuyến tính vẫn ổn định, dễ giải thích hơn *transformer*, và đôi khi cho hiệu quả vượt mong đợi.
 
 #### **Tuning hyperparameters**
@@ -297,10 +298,14 @@ best_search.fit(pd.concat([X_train, X_val]), pd.concat([y_train, y_val]))
 # Dự đoán trên test 
 tfidf_pred = best_search.best_estimator_.predict(X_test)
 ```
+![alt text](image8.png)
 Sau đó cần lưu các mẫu baseline dự đoán sai vào file csv mới để phân tích sau: "error_samples.csv".
 
 ### 5.3. Baseline tốt nhất 
-
+- Model thắng trên validation: **logistic_regression**
+- F1 trên validation: 0.9589
+- F1 trên test: 0.9638
+- Lý do thắng: Mô hình xác suất tuyến tính, dễ giải thích và có thể suy ra độ tin cậy của dự đoán.
 ## 6. DistilBERT
 DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được huấn luyện bằng kỹ thuật *knowledge distillation*, tức là một mô hình nhỏ hơn (student) học cách bắt chước mô hình lớn hơn (teacher – BERT).
 
@@ -446,16 +451,6 @@ trf_test = pd.DataFrame([metric_row("transformer", cfg.model_ckpt, "test", y_tes
 ```
 Nhận xét: F1-score đặc biệt quan trọng trong bài toán này vì cần cân bằng giữa false positive và false negative.
 
-Mô hình được đánh giá trên tập *validation* và *test*, kết quả như sau:
-
-### Kết quả và phân tích
-- Model đạt độ chính xác: ...  
-- So sánh giữa các model  
-
-### Nhận xét:
-- Model nào tốt hơn?
-- Vì sao?
-
 ### Phân tích lỗi (Error Analysis)
 - Các trường hợp model dự đoán sai  
 - Nguyên nhân:
@@ -500,6 +495,19 @@ manifest = {
 }
 manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 ```
+||path|
+|---|---|
+|csv_path|/content/data/WELFake_Dataset.csv|
+|out_dir|/content/artifacts/fake_news|
+|best_family|tfidf|
+|best_model|logistic_regression|
+|tfidf_pipeline|/content/artifacts/fake_news/tfidf_pipeline.joblib|
+|error_samples|/content/artifacts/fake_news/error_samples.csv|
+|transformer_dir|None|
+|val_results|/content/artifacts/fake_news/val_results.csv|
+|test_results|/content/artifacts/fake_news/test_results.csv|
+
+
 Các artifact đầu ra hiện tại gồm:
 - tfidf_pipeline.joblib
 - error_samples.csv
