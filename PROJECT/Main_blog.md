@@ -309,7 +309,6 @@ DistilBERT là một phiên bản rút gọn của mô hình BERT. Nó được 
 # DistilBERT dùng model public, nên không cần Hugging Face token.
 # Tokenizer biến text thành token id để model đọc được.
 tok = AutoTokenizer.from_pretrained(cfg.model_ckpt, token=None)
-# Chuẩn bị dataset từ pandas 
 dset = DatasetDict(
     {
         "train": Dataset.from_pandas(pd.DataFrame({"text": X_tr, "labels": y_tr}), preserve_index=False),
@@ -355,7 +354,8 @@ def make_args():
         "per_device_train_batch_size": cfg.train_bs,
         "per_device_eval_batch_size": cfg.eval_bs,
         "num_train_epochs": cfg.epochs,
-        "weight_decay": cfg.wd, # Hệ số regularization để tránh overfitting.
+        # Hệ số regularization để tránh overfitting.
+        "weight_decay": cfg.wd, 
         "save_strategy": "epoch",
         "load_best_model_at_end": True,
         "metric_for_best_model": "f1",
